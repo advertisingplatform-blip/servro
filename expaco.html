@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generator Factură XML</title>
+<style>
+    :root {
+      --bg-light: #f9f9f9;
+      --bg-dark: #1a1a1a;
+      --text-light: #000;
+      --text-dark: #f0f0f0;
+      --accent: #007bff;
+      --input-bg-light: #fff;
+      --input-bg-dark: #333;
+      --input-border: #ccc;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-light);
+      transition: all 0.3s ease;
+      padding: 1rem;
+    }
+
+    body.dark {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    form {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    body.dark form {
+      background: #222;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: 1px solid var(--input-border);
+      background: var(--input-bg-light);
+      color: inherit;
+    }
+
+    body.dark input,
+    body.dark select {
+      background: var(--input-bg-dark);
+      border: 1px solid #555;
+    }
+
+    button {
+      background-color: var(--accent);
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .toggle-mode {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      padding: 0.5rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 600px) {
+      form {
+        padding: 1rem;
+      }
+    }
+	
+/* Grupare câmpuri în carduri vizuale */
+.form-section {
+  background-color: rgba(0, 123, 255, 0.05);
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--input-border);
+}
+
+body.dark .form-section {
+  background-color: rgba(0, 123, 255, 0.1);
+  border-color: #444;
+}
+
+/* Etichete în fața câmpurilor */
+label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+label input,
+label select {
+  flex: 1;
+  margin: 0;
+}
+
+  </style>
+</head>
+<body>
+  <button class="toggle-mode" onclick="toggleMode()">🌙 Mod întunecat</button>
+  <form id="xmlForm">
+  <h2>Formular Factură XML</h2>
+<div class="form-section">
+  <label>ID Factură:
+    <input name="ID" required>
+  </label>
+  <div class="date-row">
+    <label>Data Emiterii:
+      <input name="IssueDate" type="date" required>
+    </label>
+    <label>Data Scadenței:
+      <input name="DueDate" type="date" required>
+    </label>
+  </div>
+</div>
+<div class="form-section">
+  <label>Nume Client: <input name="RegistrationName" required></label>
+  <label>CUI Client: <input name="CompanyID" required></label>
+  <label>Strada: <input name="StreetName" required></label>
+  <label>Oraș: <input name="CityName" required></label>
+  <label>Județ:
+      <select name="CountrySubentity" required>
+        <option value="RO-AB">Alba</option>
+        <option value="RO-AR">Arad</option>
+        <option value="RO-AG">Argeș</option>
+        <option value="RO-BC">Bacău</option>
+        <option value="RO-BH">Bihor</option>
+        <option value="RO-BN">Bistrița-Năsăud</option>
+        <option value="RO-BT">Botoșani</option>
+        <option value="RO-BV">Brașov</option>
+        <option value="RO-BR">Brăila</option>
+        <option value="RO-BZ">Buzău</option>
+        <option value="RO-CS">Caraș-Severin</option>
+        <option value="RO-CL">Călărași</option>
+        <option value="RO-CJ">Cluj</option>
+        <option value="RO-CT" selected>Constanța</option>
+        <option value="RO-CV">Covasna</option>
+        <option value="RO-DB">Dâmbovița</option>
+        <option value="RO-DJ">Dolj</option>
+        <option value="RO-GL">Galați</option>
+        <option value="RO-GR">Giurgiu</option>
+        <option value="RO-GJ">Gorj</option>
+        <option value="RO-HR">Harghita</option>
+        <option value="RO-HD">Hunedoara</option>
+        <option value="RO-IL">Ialomița</option>
+        <option value="RO-IS">Iași</option>
+        <option value="RO-IF">Ilfov</option>
+        <option value="RO-MM">Maramureș</option>
+        <option value="RO-MH">Mehedinți</option>
+        <option value="RO-MS">Mureș</option>
+        <option value="RO-NT">Neamț</option>
+        <option value="RO-OT">Olt</option>
+        <option value="RO-PH">Prahova</option>
+        <option value="RO-SM">Satu Mare</option>
+        <option value="RO-SJ">Sălaj</option>
+        <option value="RO-SB">Sibiu</option>
+        <option value="RO-SV">Suceava</option>
+        <option value="RO-TR">Teleorman</option>
+        <option value="RO-TM">Timiș</option>
+        <option value="RO-TL">Tulcea</option>
+        <option value="RO-VS">Vaslui</option>
+        <option value="RO-VL">Vâlcea</option>
+        <option value="RO-VN">Vrancea</option>
+        <option value="RO-B">București</option>
+      </select>
+    </label>
+  <label>Email/Tel Client: <input name="ContactName" required></label>
+</div>
+
+<div class="form-section">
+  <label>Denumire Serviciu: <input name="ServiceName" required></label>
+</div>
+
+<div class="form-section">
+  <label>Preț unitar: 
+    <input name="PriceAmount" type="number" step="0.01" required>
+  </label>
+  <label>Cantitate: 
+    <input name="InvoicedQuantity" type="number" step="0.01" required>
+  </label>
+  <label>Valoare impozabilă: 
+    <input name="TaxableAmount" type="number" step="0.01">
+  </label>
+  <label>Valoare totală: 
+    <input name="LineExtensionAmount" type="number" step="0.01">
+  </label>
+  <label>Valoare fără TVA: 
+    <input name="TaxExclusiveAmount" type="number" step="0.01">
+  </label>
+  <label>Valoare cu TVA: 
+    <input name="TaxInclusiveAmount" type="number" step="0.01">
+  </label>
+  <label>Total de plată: 
+    <input name="PayableAmount" type="number" step="0.01">
+  </label>
+</div>
+
+    <!-- Buton submit -->
+    <button type="submit">Generează XML</button>
+  </form>
+
+  <script>
+    const form = document.getElementById('xmlForm');
+
+    function updateCalculatedFields() {
+      const price = parseFloat(form.PriceAmount.value) || 0;
+      const qty = parseFloat(form.InvoicedQuantity.value) || 0;
+      const total = (price * qty).toFixed(2);
+
+      form.TaxableAmount.value = total;
+      form.LineExtensionAmount.value = total;
+      form.TaxExclusiveAmount.value = total;
+      form.TaxInclusiveAmount.value = total;
+      form.PayableAmount.value = total;
+    }
+
+    form.PriceAmount.addEventListener('input', updateCalculatedFields);
+    form.InvoicedQuantity.addEventListener('input', updateCalculatedFields);
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      const xml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+         xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+         xmlns:ns4="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-Invoice-2.1.xsd">
+  <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:efactura.mfinante.ro:CIUS-RO:1.0.1</cbc:CustomizationID>
+  <cbc:ID>${data.ID}</cbc:ID>
+  <cbc:IssueDate>${data.IssueDate}</cbc:IssueDate>
+  <cbc:DueDate>${data.DueDate}</cbc:DueDate>
+  <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+  <cbc:DocumentCurrencyCode>RON</cbc:DocumentCurrencyCode>
+  <cac:AccountingSupplierParty>
+    <cac:Party>
+      <cac:PostalAddress>
+        <cbc:StreetName>localitatea Poiana str Cerealelor nr 28</cbc:StreetName>
+        <cbc:CityName>OVIDIU</cbc:CityName>
+        <cbc:CountrySubentity>RO-CT</cbc:CountrySubentity>
+        <cac:Country><cbc:IdentificationCode>RO</cbc:IdentificationCode></cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cbc:CompanyID>1874890</cbc:CompanyID>
+        <cac:TaxScheme/>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>EXPACO</cbc:RegistrationName>
+        <cbc:CompanyID>1874890</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact><cbc:Name>0721201998</cbc:Name></cac:Contact>
+    </cac:Party>
+  </cac:AccountingSupplierParty>
+  <cac:AccountingCustomerParty>
+    <cac:Party>
+      <cac:PostalAddress>
+        <cbc:StreetName>${data.StreetName}</cbc:StreetName>
+        <cbc:CityName>${data.CityName}</cbc:CityName>
+        <cbc:CountrySubentity>${data.CountrySubentity}</cbc:CountrySubentity>
+        <cac:Country><cbc:IdentificationCode>RO</cbc:IdentificationCode></cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>${data.RegistrationName}</cbc:RegistrationName>
+        <cbc:CompanyID>${data.CompanyID}</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact><cbc:Name>${data.ContactName}</cbc:Name></cac:Contact>
+    </cac:Party>
+  </cac:AccountingCustomerParty>
+  <cac:PaymentMeans><cbc:PaymentMeansCode>42</cbc:PaymentMeansCode></cac:PaymentMeans>
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="RON">0.00</cbc:TaxAmount>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="RON">${data.TaxableAmount}</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="RON">0.00</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID>O</cbc:ID>
+        <cbc:Percent>0.00</cbc:Percent>
+        <cbc:TaxExemptionReasonCode>VATEX-EU-O</cbc:TaxExemptionReasonCode>
+        <cac:TaxScheme><cbc:ID>VAT</cbc:ID></cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+  </cac:TaxTotal>
+  <cac:LegalMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="RON">${data.LineExtensionAmount}</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="RON">${data.TaxExclusiveAmount}</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="RON">${data.TaxInclusiveAmount}</cbc:TaxInclusiveAmount>
+    <cbc:PayableAmount currencyID="RON">${data.PayableAmount}</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>
+  <cac:InvoiceLine>
+    <cbc:ID>1</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="H87">${data.InvoicedQuantity}</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="RON">${data.LineExtensionAmount}</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Name>${data.ServiceName}</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID>O</cbc:ID>
+        <cac:TaxScheme><cbc:ID>VAT</cbc:ID></cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="RON">${data.PriceAmount}</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+</Invoice>`;
+
+      const blob = new Blob([xml], { type: 'application/xml' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `factura-${data.ID}.xml`;
+      link.click();
+    });
+  </script>
+
+  <script>
+    function toggleMode() {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+      document.querySelector('.toggle-mode').textContent =
+        document.body.classList.contains('dark') ? '☀️ Mod luminos' : '🌙 Mod întunecat';
+    }
+
+    // Setare tema la inițializare
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+        document.querySelector('.toggle-mode').textContent = '☀️ Mod luminos';
+      }
+    });
+  </script>
+</body>
+</html>
