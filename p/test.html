@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Serv.ro — Test viteză internet</title>
 <link rel="icon" href="img/favicon.png" type="image/png">
-<link rel="apple-touch-icon" href="img/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -191,9 +190,27 @@
     padding-top: 14px;
   }
   .history h2 { font-size: 13px; font-weight: 500; color: var(--muted); margin: 0 0 10px; }
-  .history ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
-  .history li { display: flex; justify-content: space-between; font-family: "IBM Plex Mono", monospace; font-size: 13px; color: var(--paper); }
-  .history li span.t { color: var(--muted); font-family: "Space Grotesk", sans-serif; }
+  .history ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .history li {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 8px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    color: var(--paper);
+  }
+  .h-meta { display: flex; align-items: center; gap: 6px; min-width: 0; }
+  .h-icon { flex-shrink: 0; color: var(--muted); }
+  .h-isp {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .h-date { font-family: "Space Grotesk", sans-serif; font-size: 12px; color: var(--muted); }
 
   footer {
     max-width: 640px;
@@ -387,6 +404,33 @@
     return bps ? (bps / 1e6).toFixed(1) : '0.0';
   }
 
+  let netInfo = { isp: null, type: null };
+
+  function detectNetworkType() {
+    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (conn && conn.type) netInfo.type = conn.type; // 'cellular' | 'wifi' | 'ethernet' | ...
+  }
+
+  async function detectIsp() {
+    try {
+      const res = await fetch('https://ipapi.co/json/');
+      const data = await res.json();
+      if (data && data.org) netInfo.isp = data.org;
+    } catch {}
+  }
+
+  detectNetworkType();
+  detectIsp();
+
+  const ICON_WIFI = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 8.5a17 17 0 0 1 20 0"/><path d="M5.5 12.5a12 12 0 0 1 13 0"/><path d="M9 16.5a6.5 6.5 0 0 1 6 0"/><circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/></svg>';
+  const ICON_CELL = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="14" width="3" height="6"/><rect x="8.5" y="10" width="3" height="10"/><rect x="14" y="6" width="3" height="14"/><rect x="19.5" y="2" width="3" height="18"/></svg>';
+
+  function networkIcon(type) {
+    if (type === 'cellular') return ICON_CELL;
+    if (type === 'wifi' || type === 'ethernet' || type === 'other' || type === 'wimax') return ICON_WIFI;
+    return '';
+  }
+
   function loadHistory() {
     try {
       const raw = localStorage.getItem('servro_speedtest_history');
@@ -406,9 +450,15 @@
     const list = loadHistory();
     if (!list.length) return;
     historyBox.style.display = 'block';
-    historyList.innerHTML = list.map(e =>
-      `<li><span class="t">${e.date}</span><span>↓ ${e.down} · ↑ ${e.up} Mbps</span></li>`
-    ).join('');
+    historyList.innerHTML = list.map(e => {
+      const icon = networkIcon(e.netType);
+      const isp = e.isp ? `<span class="h-isp">${e.isp}</span>` : '';
+      return `<li>
+        <span class="h-meta">${icon ? `<span class="h-icon">${icon}</span>` : ''}${isp}</span>
+        <span class="h-date">${e.date}</span>
+        <span>↓ ${e.down} · ↑ ${e.up} Mbps</span>
+      </li>`;
+    }).join('');
   }
 
   function runTest() {
@@ -464,7 +514,9 @@
 
       saveHistory({
         date: new Date().toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit' }),
-        down, up
+        down, up,
+        isp: netInfo.isp,
+        netType: netInfo.type
       });
       renderHistory();
 
