@@ -192,16 +192,14 @@
   .history h2 { font-size: 13px; font-weight: 500; color: var(--muted); margin: 0 0 10px; }
   .history ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
   .history li {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
+    display: flex;
     align-items: center;
     gap: 8px;
     font-family: "IBM Plex Mono", monospace;
     font-size: 13px;
     color: var(--paper);
   }
-  .h-meta { display: flex; align-items: center; gap: 6px; min-width: 0; }
-  .h-icon { flex-shrink: 0; color: var(--muted); }
+  .h-icon { flex-shrink: 0; color: var(--muted); display: flex; }
   .h-isp {
     font-family: "Space Grotesk", sans-serif;
     font-size: 12px;
@@ -209,8 +207,10 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    min-width: 0;
   }
-  .h-date { font-family: "Space Grotesk", sans-serif; font-size: 12px; color: var(--muted); }
+  .h-date { font-family: "Space Grotesk", sans-serif; font-size: 12px; color: var(--muted); flex-shrink: 0; }
+  .h-vals { margin-left: auto; flex-shrink: 0; }
 
   footer {
     max-width: 640px;
@@ -423,14 +423,9 @@
     if (netInfo.type) return; // native API already gave us a real answer
     try {
       const res = await fetch('https://api.ipapi.is/');
-      console.log('[servro] ipapi.is status:', res.status);
       const data = await res.json();
-      console.log('[servro] ipapi.is data:', data);
-      if (typeof data.is_mobile === 'boolean') {
-        netInfo.type = data.is_mobile ? 'cellular' : 'wifi';
-      } else {
-        console.warn('[servro] is_mobile field missing from response');
-      }
+      const hay = `${data.company || ''} ${data.asn || ''}`.toLowerCase();
+      netInfo.type = /mobile|wireless|cellular/.test(hay) ? 'cellular' : 'wifi';
     } catch (e) { console.warn('[servro] network-class lookup failed:', e); }
   }
 
@@ -470,9 +465,10 @@
       const icon = networkIcon(e.netType);
       const isp = e.isp ? `<span class="h-isp">${e.isp}</span>` : '';
       return `<li>
-        <span class="h-meta">${icon ? `<span class="h-icon">${icon}</span>` : ''}${isp}</span>
         <span class="h-date">${e.date}</span>
-        <span>↓ ${e.down} · ↑ ${e.up} Mbps</span>
+        ${isp}
+        ${icon ? `<span class="h-icon">${icon}</span>` : ''}
+        <span class="h-vals">↓ ${e.down} · ↑ ${e.up} Mbps</span>
       </li>`;
     }).join('');
   }
@@ -529,7 +525,8 @@
       });
 
       saveHistory({
-        date: new Date().toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit' }),
+        date: new Date().toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit' }) + ' ' +
+              new Date().toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' }),
         down, up,
         isp: netInfo.isp,
         netType: netInfo.type
