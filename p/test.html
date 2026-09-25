@@ -422,11 +422,11 @@
   async function detectNetworkClass() {
     if (netInfo.type) return; // native API already gave us a real answer
     try {
-      const res = await fetch('https://api.ipbot.com/');
+      const res = await fetch('https://api.ipapi.is/');
       const data = await res.json();
-      const hay = `${data?.network?.category || ''} ${data?.network?.operator_type || ''} ${data?.network?.org || ''}`.toLowerCase();
-      if (/mobile|cellular|wireless/.test(hay)) netInfo.type = 'cellular';
-      else if (data?.network) netInfo.type = 'wifi';
+      if (typeof data.is_mobile === 'boolean') {
+        netInfo.type = data.is_mobile ? 'cellular' : 'wifi';
+      }
     } catch {}
   }
 
