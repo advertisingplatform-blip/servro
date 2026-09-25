@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Serv.ro — Test viteză internet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0D1B24;
+    --panel: #142832;
+    --panel-line: #223642;
+    --paper: #ECEEE7;
+    --muted: #7C919A;
+    --signal: #FF8A3D;
+    --current: #45C7BA;
+    --danger: #E8615A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #0D1B24; --panel: #142832; --panel-line: #223642;
+      --paper: #ECEEE7; --muted: #7C919A; --signal: #FF8A3D; --current: #45C7BA;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #0D1B24; --panel: #142832; --panel-line: #223642;
+    --paper: #ECEEE7; --muted: #7C919A; --signal: #FF8A3D; --current: #45C7BA;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: "Space Grotesk", sans-serif;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  header {
+    width: 100%;
+    max-width: 640px;
+    padding: 28px 20px 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--signal); flex-shrink: 0; }
+  .brand { font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
+  .brand span { color: var(--muted); font-weight: 500; }
+
+  main {
+    width: 100%;
+    max-width: 640px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .status {
+    font-size: 14px;
+    color: var(--muted);
+    height: 20px;
+    margin-bottom: 6px;
+  }
+
+  .reading {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-family: "IBM Plex Mono", monospace;
+  }
+  .reading .num { font-size: clamp(56px, 16vw, 96px); font-weight: 600; color: var(--paper); line-height: 1; }
+  .reading .unit { font-size: 18px; color: var(--muted); }
+  .reading-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  .bars {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 5px;
+    height: 56px;
+    margin: 22px 0 26px;
+  }
+  .bars .bar {
+    width: 6px;
+    border-radius: 3px;
+    background: var(--panel-line);
+    height: 10%;
+    transition: height 0.35s ease, background 0.35s ease;
+  }
+  .bars.running .bar { animation: pulse 1.1s ease-in-out infinite; }
+  .bars .bar:nth-child(1) { animation-delay: 0s; }
+  .bars .bar:nth-child(2) { animation-delay: 0.08s; }
+  .bars .bar:nth-child(3) { animation-delay: 0.16s; }
+  .bars .bar:nth-child(4) { animation-delay: 0.24s; }
+  .bars .bar:nth-child(5) { animation-delay: 0.32s; }
+  .bars .bar:nth-child(6) { animation-delay: 0.4s; }
+  .bars .bar:nth-child(7) { animation-delay: 0.32s; }
+  .bars .bar:nth-child(8) { animation-delay: 0.24s; }
+  .bars .bar:nth-child(9) { animation-delay: 0.16s; }
+  .bars .bar:nth-child(10) { animation-delay: 0.08s; }
+  .bars .bar:nth-child(11) { animation-delay: 0s; }
+  @keyframes pulse {
+    0%, 100% { height: 14%; }
+    50% { height: 85%; }
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 22px;
+  }
+  .stat {
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .stat .val { font-family: "IBM Plex Mono", monospace; font-size: 22px; font-weight: 600; }
+  .stat .lab { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .stat.up .val { color: var(--current); }
+
+  button#go {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--ink);
+    background: var(--signal);
+    border: none;
+    border-radius: 999px;
+    padding: 14px 34px;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  button#go:hover { transform: translateY(-1px); }
+  button#go:active { transform: translateY(0); }
+  button#go:disabled { opacity: 0.55; cursor: default; transform: none; }
+  button#go:focus-visible { outline: 2px solid var(--paper); outline-offset: 3px; }
+
+  .isp-row {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .isp-row a {
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  .isp-row a:hover { border-bottom-color: var(--muted); }
+
+  .history {
+    width: 100%;
+    margin-top: 26px;
+    border-top: 1px solid var(--panel-line);
+    padding-top: 14px;
+  }
+  .history h2 { font-size: 13px; font-weight: 500; color: var(--muted); margin: 0 0 10px; }
+  .history ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .history li { display: flex; justify-content: space-between; font-family: "IBM Plex Mono", monospace; font-size: 13px; color: var(--paper); }
+  .history li span.t { color: var(--muted); font-family: "Space Grotesk", sans-serif; }
+
+  footer {
+    max-width: 640px;
+    padding: 18px 20px 34px;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bars.running .bar { animation: none; height: 40%; }
+    button#go:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-dot"></div>
+  <div class="brand">serv<span>.ro</span></div>
+</header>
+
+<main>
+  <div class="status" id="status">Apasă start pentru a testa conexiunea</div>
+
+  <div class="reading">
+    <span class="num" id="mainNum">0.0</span>
+    <span class="unit">Mbps</span>
+  </div>
+  <div class="reading-label" id="mainLabel">Descărcare</div>
+
+  <div class="bars" id="bars">
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat up">
+      <div class="val" id="upVal">—</div>
+      <div class="lab">Încărcare (Mbps)</div>
+    </div>
+    <div class="stat">
+      <div class="val" id="pingVal">—</div>
+      <div class="lab">Ping (ms)</div>
+    </div>
+  </div>
+
+  <button id="go">Pornește testul</button>
+
+  <div class="isp-row">
+    <a href="/p/rcs-rds.html">Digi</a>
+    <a href="/p/orange.html">Orange</a>
+    <a href="/p/telekom.html">Telekom</a>
+    <a href="/p/vodafone.html">Vodafone</a>
+  </div>
+
+  <div class="history" id="historyBox" style="display:none;">
+    <h2>Ultimele teste</h2>
+    <ul id="historyList"></ul>
+  </div>
+</main>
+
+<footer>
+  Test rulat direct în browser, prin rețeaua globală Cloudflare — niciun fișier de test nu trece prin serverul serv.ro.
+</footer>
+
+<script type="module">
+  import SpeedTest from "https://cdn.jsdelivr.net/npm/@cloudflare/speedtest@1.3.0/dist/speedtest.js";
+
+  const bars = document.getElementById('bars');
+  const statusEl = document.getElementById('status');
+  const mainNum = document.getElementById('mainNum');
+  const mainLabel = document.getElementById('mainLabel');
+  const upVal = document.getElementById('upVal');
+  const pingVal = document.getElementById('pingVal');
+  const goBtn = document.getElementById('go');
+  const historyBox = document.getElementById('historyBox');
+  const historyList = document.getElementById('historyList');
+
+  const measurements = [
+    { type: 'latency', numPackets: 1 },
+    { type: 'download', bytes: 1e5, count: 1, bypassMinDuration: true },
+    { type: 'latency', numPackets: 20 },
+    { type: 'download', bytes: 1e5, count: 9 },
+    { type: 'download', bytes: 1e6, count: 8 },
+    { type: 'upload', bytes: 1e5, count: 8 },
+    { type: 'upload', bytes: 1e6, count: 6 },
+    { type: 'download', bytes: 1e7, count: 6 },
+    { type: 'upload', bytes: 1e7, count: 4 },
+    { type: 'download', bytes: 2.5e7, count: 4 },
+    { type: 'upload', bytes: 2.5e7, count: 4 },
+    { type: 'download', bytes: 1e8, count: 3 },
+    { type: 'upload', bytes: 5e7, count: 3 },
+    { type: 'download', bytes: 2.5e8, count: 2 }
+  ];
+
+  function mbps(bps) {
+    return bps ? (bps / 1e6).toFixed(1) : '0.0';
+  }
+
+  function loadHistory() {
+    try {
+      const raw = localStorage.getItem('servro_speedtest_history');
+      return raw ? JSON.parse(raw) : [];
+    } catch { return []; }
+  }
+
+  function saveHistory(entry) {
+    try {
+      const list = loadHistory();
+      list.unshift(entry);
+      localStorage.setItem('servro_speedtest_history', JSON.stringify(list.slice(0, 5)));
+    } catch {}
+  }
+
+  function renderHistory() {
+    const list = loadHistory();
+    if (!list.length) return;
+    historyBox.style.display = 'block';
+    historyList.innerHTML = list.map(e =>
+      `<li><span class="t">${e.date}</span><span>↓ ${e.down} · ↑ ${e.up} Mbps</span></li>`
+    ).join('');
+  }
+
+  function runTest() {
+    goBtn.disabled = true;
+    goBtn.textContent = 'Se testează…';
+    bars.classList.add('running');
+    mainLabel.textContent = 'Latență';
+    statusEl.textContent = 'Se măsoară latența conexiunii…';
+    upVal.textContent = '—';
+    pingVal.textContent = '—';
+
+    const test = new SpeedTest({ autoStart: false, measurements });
+
+    test.onResultsChange = ({ type }) => {
+      if (type === 'latency') {
+        const lat = test.results.getUnloadedLatency();
+        if (lat) pingVal.textContent = Math.round(lat);
+      }
+      if (type === 'download') {
+        mainLabel.textContent = 'Descărcare';
+        statusEl.textContent = 'Se testează viteza de descărcare…';
+        const bw = test.results.getDownloadBandwidth();
+        if (bw) mainNum.textContent = mbps(bw);
+      }
+      if (type === 'upload') {
+        mainLabel.textContent = 'Descărcare';
+        statusEl.textContent = 'Se testează viteza de încărcare…';
+        const bw = test.results.getUploadBandwidth();
+        if (bw) upVal.textContent = mbps(bw);
+      }
+    };
+
+    test.onFinish = (results) => {
+      bars.classList.remove('running');
+      const down = mbps(results.getDownloadBandwidth());
+      const up = mbps(results.getUploadBandwidth());
+      const lat = Math.round(results.getUnloadedLatency() || 0);
+      mainNum.textContent = down;
+      mainLabel.textContent = 'Descărcare';
+      upVal.textContent = up;
+      pingVal.textContent = lat;
+      statusEl.textContent = 'Test finalizat';
+      goBtn.disabled = false;
+      goBtn.textContent = 'Testează din nou';
+
+      const bs = bars.querySelectorAll('.bar');
+      const ratio = Math.min(1, parseFloat(up) / Math.max(parseFloat(down), 0.1));
+      bs.forEach((b, i) => {
+        const h = i < bs.length / 2 ? 85 : Math.max(14, ratio * 85);
+        b.style.height = h + '%';
+        b.style.background = i < bs.length / 2 ? 'var(--signal)' : 'var(--current)';
+      });
+
+      saveHistory({
+        date: new Date().toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit' }),
+        down, up
+      });
+      renderHistory();
+    };
+
+    test.onError = (err) => {
+      statusEl.textContent = 'A apărut o eroare, încearcă din nou.';
+      bars.classList.remove('running');
+      goBtn.disabled = false;
+      goBtn.textContent = 'Testează din nou';
+    };
+
+    test.play();
+  }
+
+  goBtn.addEventListener('click', runTest);
+  renderHistory();
+</script>
+
+</body>
+</html>
