@@ -416,18 +416,22 @@
       const res = await fetch('https://ipapi.co/json/');
       const data = await res.json();
       if (data && data.org) netInfo.isp = data.org;
-    } catch {}
+    } catch (e) { console.warn('[servro] ISP lookup failed:', e); }
   }
 
   async function detectNetworkClass() {
     if (netInfo.type) return; // native API already gave us a real answer
     try {
       const res = await fetch('https://api.ipapi.is/');
+      console.log('[servro] ipapi.is status:', res.status);
       const data = await res.json();
+      console.log('[servro] ipapi.is data:', data);
       if (typeof data.is_mobile === 'boolean') {
         netInfo.type = data.is_mobile ? 'cellular' : 'wifi';
+      } else {
+        console.warn('[servro] is_mobile field missing from response');
       }
-    } catch {}
+    } catch (e) { console.warn('[servro] network-class lookup failed:', e); }
   }
 
   detectNetworkType();
