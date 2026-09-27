@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Serv.ro — Test viteză internet</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📶</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0D1B24;
+    --panel: #142832;
+    --panel-line: #223642;
+    --paper: #ECEEE7;
+    --muted: #7C919A;
+    --signal: #FF8A3D;
+    --current: #45C7BA;
+    --danger: #E8615A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #0D1B24; --panel: #142832; --panel-line: #223642;
+      --paper: #ECEEE7; --muted: #7C919A; --signal: #FF8A3D; --current: #45C7BA;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #0D1B24; --panel: #142832; --panel-line: #223642;
+    --paper: #ECEEE7; --muted: #7C919A; --signal: #FF8A3D; --current: #45C7BA;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: "Space Grotesk", sans-serif;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  header {
+    width: 100%;
+    max-width: 640px;
+    padding: 28px 20px 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--signal); flex-shrink: 0; }
+  .brand { font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
+  .brand span { color: var(--muted); font-weight: 500; }
+
+  main {
+    width: 100%;
+    max-width: 640px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .status {
+    font-size: 14px;
+    color: var(--muted);
+    height: 20px;
+    margin-bottom: 6px;
+  }
+
+  .reading {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-family: "IBM Plex Mono", monospace;
+  }
+  .reading .num { font-size: clamp(56px, 16vw, 96px); font-weight: 600; color: var(--paper); line-height: 1; }
+  .reading .unit { font-size: 18px; color: var(--muted); }
+  .reading-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  .gauge-wrap {
+    width: 100%;
+    max-width: 340px;
+    margin: 10px 0 8px;
+  }
+  .gauge-track { fill: none; stroke: var(--panel-line); stroke-width: 14; stroke-linecap: round; }
+  .gauge-progress { fill: none; stroke: var(--signal); stroke-width: 14; stroke-linecap: round; transition: d 0.4s ease, stroke 0.4s ease; }
+  .gauge-tick { stroke: var(--panel-line); stroke-width: 2; }
+  .gauge-needle { stroke: var(--paper); stroke-width: 3; stroke-linecap: round; transition: x2 0.5s cubic-bezier(.34,1.4,.64,1), y2 0.5s cubic-bezier(.34,1.4,.64,1); }
+  .gauge-hub { fill: var(--paper); }
+  .gauge-mark { fill: var(--current); transition: cx 0.5s ease, cy 0.5s ease; opacity: 0; }
+  .gauge-mark.show { opacity: 1; }
+
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 22px;
+  }
+  .stat {
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .stat .val { font-family: "IBM Plex Mono", monospace; font-size: 22px; font-weight: 600; }
+  .stat .lab { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .stat.up .val { color: var(--current); }
+
+  button#go {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--ink);
+    background: var(--signal);
+    border: none;
+    border-radius: 999px;
+    padding: 14px 34px;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  button#go:hover { transform: translateY(-1px); }
+  button#go:active { transform: translateY(0); }
+  button#go:disabled { opacity: 0.55; cursor: default; transform: none; }
+  button#go:focus-visible { outline: 2px solid var(--paper); outline-offset: 3px; }
+
+  .share-row {
+    display: none;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .share-row button {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--paper);
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 999px;
+    padding: 10px 18px;
+    cursor: pointer;
+  }
+  .share-row button:hover { border-color: var(--muted); }
+  .share-row button.fb { color: var(--ink); background: var(--current); border-color: var(--current); }
+  .share-note { font-size: 12px; color: var(--muted); margin-top: 8px; text-align: center; max-width: 400px; }
+
+  .isp-row {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .isp-row a {
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  .isp-row a:hover { border-bottom-color: var(--muted); }
+
+  .history {
+    width: 100%;
+    margin-top: 26px;
+    border-top: 1px solid var(--panel-line);
+    padding-top: 14px;
+  }
+  .history h2 { font-size: 13px; font-weight: 500; color: var(--muted); margin: 0 0 10px; }
+  .history ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .history li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    color: var(--paper);
+  }
+  .h-icon { flex-shrink: 0; color: var(--muted); display: flex; }
+  .h-isp {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+  .h-date { font-family: "Space Grotesk", sans-serif; font-size: 12px; color: var(--muted); flex-shrink: 0; }
+  .h-vals { margin-left: auto; flex-shrink: 0; }
+
+  footer {
+    max-width: 640px;
+    padding: 18px 20px 34px;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gauge-needle, .gauge-progress, .gauge-mark { transition: none; }
+    button#go:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-dot"></div>
+  <div class="brand">serv<span>.ro</span></div>
+</header>
+
+<main>
+  <div class="status" id="status">Apasă start pentru a testa conexiunea</div>
+
+  <div class="reading">
+    <span class="num" id="mainNum">0.0</span>
+    <span class="unit">Mbps</span>
+  </div>
+  <div class="reading-label" id="mainLabel">Descărcare</div>
+
+  <div class="gauge-wrap">
+    <svg viewBox="0 0 300 170" width="100%" role="img" aria-label="Vitezometru">
+      <path class="gauge-track" d="M20,155 A130,130 0 0 1 280,155"/>
+      <path class="gauge-progress" id="gaugeProgress" d="M20,155 A130,130 0 0 1 20,155"/>
+      <line class="gauge-tick" x1="12" y1="155" x2="0" y2="155"/>
+      <line class="gauge-tick" x1="52.4" y1="57.4" x2="43.9" y2="48.9"/>
+      <line class="gauge-tick" x1="150" y1="17" x2="150" y2="5"/>
+      <line class="gauge-tick" x1="247.6" y1="57.4" x2="256.1" y2="48.9"/>
+      <line class="gauge-tick" x1="288" y1="155" x2="300" y2="155"/>
+      <circle class="gauge-mark" id="gaugeMark" cx="50" cy="155" r="6"/>
+      <line class="gauge-needle" id="gaugeNeedle" x1="150" y1="155" x2="50" y2="155"/>
+      <circle class="gauge-hub" cx="150" cy="155" r="8"/>
+    </svg>
+  </div>
+
+  <div class="stats">
+    <div class="stat up">
+      <div class="val" id="upVal">—</div>
+      <div class="lab">Încărcare (Mbps)</div>
+    </div>
+    <div class="stat">
+      <div class="val" id="pingVal">—</div>
+      <div class="lab">Ping (ms)</div>
+    </div>
+  </div>
+
+  <button id="go">Pornește testul</button>
+
+  <div class="share-row" id="shareRow">
+    <button id="shareBtn" class="fb">Distribuie rezultatul</button>
+    <button id="downloadBtn">Descarcă imaginea</button>
+  </div>
+  <div class="share-note" id="shareNote"></div>
+
+  <div class="isp-row">
+    <a href="/p/rcs-rds.html">Digi</a>
+    <a href="/p/orange.html">Orange</a>
+    <a href="/p/telekom.html">Telekom</a>
+    <a href="/p/vodafone.html">Vodafone</a>
+  </div>
+
+  <div class="history" id="historyBox" style="display:none;">
+    <h2>Ultimele teste</h2>
+    <ul id="historyList"></ul>
+  </div>
+</main>
+
+<footer>
+  Test rulat direct în browser, prin rețeaua globală Cloudflare — niciun fișier de test nu trece prin serverul serv.ro.
+</footer>
+
+<script type="module">
+  import SpeedTest from "https://cdn.jsdelivr.net/npm/@cloudflare/speedtest@1.3.0/+esm";
+
+  const gaugeProgress = document.getElementById('gaugeProgress');
+  const gaugeNeedle = document.getElementById('gaugeNeedle');
+  const gaugeMark = document.getElementById('gaugeMark');
+  let gaugeMax = 300;
+  const GAUGE_TIERS = [100, 300, 1000, 3000, 10000];
+
+  function polar(deg, r) {
+    const rad = deg * Math.PI / 180;
+    return { x: 150 + r * Math.cos(rad), y: 155 - r * Math.sin(rad) };
+  }
+  function angleFor(v, max) {
+    const t = Math.sqrt(Math.min(Math.max(v, 0), max) / max);
+    return 180 - t * 180;
+  }
+  function setGauge(value, color) {
+    const tier = GAUGE_TIERS.find(t => value < t * 0.85) || GAUGE_TIERS.at(-1);
+    if (tier > gaugeMax) gaugeMax = tier;
+    const deg = angleFor(value, gaugeMax);
+    const tip = polar(deg, 100);
+    gaugeNeedle.setAttribute('x2', tip.x.toFixed(1));
+    gaugeNeedle.setAttribute('y2', tip.y.toFixed(1));
+    const p = polar(deg, 130);
+    gaugeProgress.setAttribute('d', `M20,155 A130,130 0 0 1 ${p.x.toFixed(1)},${p.y.toFixed(1)}`);
+    if (color) gaugeProgress.style.stroke = color;
+  }
+  function markGauge(value) {
+    const deg = angleFor(value, gaugeMax);
+    const p = polar(deg, 130);
+    gaugeMark.setAttribute('cx', p.x.toFixed(1));
+    gaugeMark.setAttribute('cy', p.y.toFixed(1));
+    gaugeMark.classList.add('show');
+  }
+  function resetGauge() {
+    gaugeMax = 300;
+    gaugeProgress.setAttribute('d', 'M20,155 A130,130 0 0 1 20,155');
+    gaugeProgress.style.stroke = 'var(--signal)';
+    gaugeNeedle.setAttribute('x2', '50'); gaugeNeedle.setAttribute('y2', '155');
+    gaugeMark.classList.remove('show');
+  }
+  const statusEl = document.getElementById('status');
+  const mainNum = document.getElementById('mainNum');
+  const mainLabel = document.getElementById('mainLabel');
+  const upVal = document.getElementById('upVal');
+  const pingVal = document.getElementById('pingVal');
+  const goBtn = document.getElementById('go');
+  const historyBox = document.getElementById('historyBox');
+  const historyList = document.getElementById('historyList');
+  const shareRow = document.getElementById('shareRow');
+  const shareBtn = document.getElementById('shareBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const shareNote = document.getElementById('shareNote');
+  let lastResult = null;
+
+  async function buildResultImage(down, up, lat) {
+    await document.fonts.ready;
+    const c = document.createElement('canvas');
+    c.width = 1200; c.height = 630;
+    const ctx = c.getContext('2d');
+    const g = ctx.createLinearGradient(0, 0, 1200, 630);
+    g.addColorStop(0, '#0D1B24'); g.addColorStop(1, '#152C38');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, 1200, 630);
+
+    ctx.fillStyle = '#FF8A3D';
+    ctx.beginPath(); ctx.arc(70, 78, 9, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#ECEEE7';
+    ctx.font = '600 34px "Space Grotesk"';
+    ctx.fillText('serv.ro', 92, 90);
+
+    ctx.font = '600 190px "IBM Plex Mono"';
+    ctx.fillStyle = '#ECEEE7';
+    ctx.fillText(down, 90, 380);
+    const w = ctx.measureText(down).width;
+    ctx.font = '400 40px "IBM Plex Mono"';
+    ctx.fillStyle = '#7C919A';
+    ctx.fillText('Mbps', 110 + w, 380);
+    ctx.font = '500 30px "Space Grotesk"';
+    ctx.fillStyle = '#7C919A';
+    ctx.fillText('Viteză descărcare', 92, 430);
+
+    const stats = [['Încărcare', up + ' Mbps'], ['Ping', lat + ' ms']];
+    stats.forEach(([lab, val], i) => {
+      const x = 92 + i * 400;
+      ctx.fillStyle = '#142832';
+      ctx.strokeStyle = '#223642';
+      ctx.beginPath(); ctx.roundRect(x, 480, 360, 100, 14); ctx.fill(); ctx.stroke();
+      ctx.font = '600 34px "IBM Plex Mono"';
+      ctx.fillStyle = i === 0 ? '#45C7BA' : '#ECEEE7';
+      ctx.fillText(val, x + 24, 528);
+      ctx.font = '400 20px "Space Grotesk"';
+      ctx.fillStyle = '#7C919A';
+      ctx.fillText(lab, x + 24, 560);
+    });
+
+    ctx.font = '400 22px "Space Grotesk"';
+    ctx.fillStyle = '#7C919A';
+    ctx.fillText('Testează-ți și tu conexiunea pe serv.ro', 92, 600);
+    return new Promise(resolve => c.toBlob(resolve, 'image/png'));
+  }
+
+  downloadBtn.addEventListener('click', async () => {
+    if (!lastResult) return;
+    const blob = await buildResultImage(lastResult.down, lastResult.up, lastResult.lat);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'test-viteza-servro.png';
+    a.click();
+  });
+
+  shareBtn.addEventListener('click', async () => {
+    if (!lastResult) return;
+    const { down, up, lat } = lastResult;
+    const text = `Am obținut ${down} Mbps descărcare / ${up} Mbps încărcare la testul de pe serv.ro`;
+    const blob = await buildResultImage(down, up, lat);
+    const file = new File([blob], 'test-viteza-servro.png', { type: 'image/png' });
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title: 'Test viteză serv.ro', text });
+        return;
+      } catch { return; }
+    }
+
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'test-viteza-servro.png';
+    a.click();
+    shareNote.textContent = 'Imaginea s-a descărcat — atașeaz-o manual la postarea de Facebook care se deschide acum.';
+
+    const url = encodeURIComponent(location.href.split('?')[0]);
+    const quote = encodeURIComponent(text);
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${quote}`, '_blank', 'noopener,width=600,height=520');
+  });
+
+  const measurements = [
+    { type: 'latency', numPackets: 1 },
+    { type: 'download', bytes: 1e5, count: 1, bypassMinDuration: true },
+    { type: 'latency', numPackets: 20 },
+    { type: 'download', bytes: 1e5, count: 9 },
+    { type: 'download', bytes: 1e6, count: 8 },
+    { type: 'upload', bytes: 1e5, count: 8 },
+    { type: 'upload', bytes: 1e6, count: 6 },
+    { type: 'download', bytes: 1e7, count: 6 },
+    { type: 'upload', bytes: 1e7, count: 4 },
+    { type: 'download', bytes: 2.5e7, count: 4 },
+    { type: 'upload', bytes: 2.5e7, count: 4 },
+    { type: 'download', bytes: 1e8, count: 3 },
+    { type: 'upload', bytes: 5e7, count: 3 },
+    { type: 'download', bytes: 2.5e8, count: 2 }
+  ];
+
+  function mbps(bps) {
+    return bps ? (bps / 1e6).toFixed(1) : '0.0';
+  }
+
+  let netInfo = { isp: null, type: null };
+
+  function detectNetworkType() {
+    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (conn && conn.type) netInfo.type = conn.type; // 'cellular' | 'wifi' | 'ethernet' | ...
+  }
+
+  async function detectIsp() {
+    try {
+      const res = await fetch('https://ipapi.co/json/');
+      const data = await res.json();
+      if (data && data.org) netInfo.isp = data.org;
+    } catch (e) { console.warn('[servro] ISP lookup failed:', e); }
+  }
+
+  async function detectNetworkClass() {
+    if (netInfo.type) return; // native API already gave us a real answer
+    try {
+      const res = await fetch('https://api.ipapi.is/');
+      const data = await res.json();
+      const hay = `${data.company || ''} ${data.asn || ''}`.toLowerCase();
+      netInfo.type = /mobile|wireless|cellular/.test(hay) ? 'cellular' : 'wifi';
+    } catch (e) { console.warn('[servro] network-class lookup failed:', e); }
+  }
+
+  detectNetworkType();
+  detectIsp();
+  detectNetworkClass();
+
+  const ICON_WIFI = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 8.5a17 17 0 0 1 20 0"/><path d="M5.5 12.5a12 12 0 0 1 13 0"/><path d="M9 16.5a6.5 6.5 0 0 1 6 0"/><circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/></svg>';
+  const ICON_CELL = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="14" width="3" height="6"/><rect x="8.5" y="10" width="3" height="10"/><rect x="14" y="6" width="3" height="14"/><rect x="19.5" y="2" width="3" height="18"/></svg>';
+
+  function networkIcon(type) {
+    if (type === 'cellular') return ICON_CELL;
+    if (type === 'wifi' || type === 'ethernet' || type === 'other' || type === 'wimax') return ICON_WIFI;
+    return '';
+  }
+
+  function loadHistory() {
+    try {
+      const raw = localStorage.getItem('servro_speedtest_history');
+      return raw ? JSON.parse(raw) : [];
+    } catch { return []; }
+  }
+
+  function saveHistory(entry) {
+    try {
+      const list = loadHistory();
+      list.unshift(entry);
+      localStorage.setItem('servro_speedtest_history', JSON.stringify(list.slice(0, 5)));
+    } catch {}
+  }
+
+  function renderHistory() {
+    const list = loadHistory();
+    if (!list.length) return;
+    historyBox.style.display = 'block';
+    historyList.innerHTML = list.map(e => {
+      const icon = networkIcon(e.netType);
+      const isp = e.isp ? `<span class="h-isp">${e.isp}</span>` : '';
+      return `<li>
+        <span class="h-date">${e.date}</span>
+        ${isp}
+        ${icon ? `<span class="h-icon">${icon}</span>` : ''}
+        <span class="h-vals">↓ ${e.down} · ↑ ${e.up} Mbps</span>
+      </li>`;
+    }).join('');
+  }
+
+  function runTest() {
+    goBtn.disabled = true;
+    goBtn.textContent = 'Se testează…';
+    resetGauge();
+    mainLabel.textContent = 'Latență';
+    statusEl.textContent = 'Se măsoară latența conexiunii…';
+    upVal.textContent = '—';
+    pingVal.textContent = '—';
+
+    const test = new SpeedTest({ autoStart: false, measurements });
+
+    test.onResultsChange = ({ type }) => {
+      if (type === 'latency') {
+        const lat = test.results.getUnloadedLatency();
+        if (lat) pingVal.textContent = Math.round(lat);
+      }
+      if (type === 'download') {
+        mainLabel.textContent = 'Descărcare';
+        statusEl.textContent = 'Se testează viteza de descărcare…';
+        const bw = test.results.getDownloadBandwidth();
+        if (bw) { mainNum.textContent = mbps(bw); setGauge(parseFloat(mbps(bw)), 'var(--signal)'); }
+      }
+      if (type === 'upload') {
+        mainLabel.textContent = 'Încărcare';
+        statusEl.textContent = 'Se testează viteza de încărcare…';
+        const bw = test.results.getUploadBandwidth();
+        if (bw) { upVal.textContent = mbps(bw); setGauge(parseFloat(mbps(bw)), 'var(--current)'); }
+      }
+    };
+
+    test.onFinish = (results) => {
+      const down = mbps(results.getDownloadBandwidth());
+      const up = mbps(results.getUploadBandwidth());
+      const lat = Math.round(results.getUnloadedLatency() || 0);
+      mainNum.textContent = down;
+      mainLabel.textContent = 'Descărcare';
+      upVal.textContent = up;
+      pingVal.textContent = lat;
+      statusEl.textContent = 'Test finalizat';
+      goBtn.disabled = false;
+      goBtn.textContent = 'Testează din nou';
+
+      setGauge(parseFloat(down), 'var(--signal)');
+      markGauge(parseFloat(up));
+
+      saveHistory({
+        date: new Date().toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit' }) + ' ' +
+              new Date().toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' }),
+        down, up,
+        isp: netInfo.isp,
+        netType: netInfo.type
+      });
+      renderHistory();
+
+      lastResult = { down, up, lat };
+      shareRow.style.display = 'flex';
+      shareNote.textContent = '';
+    };
+
+    test.onError = (err) => {
+      statusEl.textContent = 'A apărut o eroare, încearcă din nou.';
+      resetGauge();
+      goBtn.disabled = false;
+      goBtn.textContent = 'Testează din nou';
+    };
+
+    test.play();
+  }
+
+  goBtn.addEventListener('click', runTest);
+  renderHistory();
+</script>
+
+</body>
+</html>
