@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Test viteză internet Digi - speed test</title>
+  <meta name="description" content="Testează viteza si calitatea conexiunii tale Digi la internet, printr-un instrument interactiv și ușor de utilizat.">
+  <meta name="keywords" content="test viteza digi, speed test digi, ora exacta">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://serv.ro/p/rcs-rds.html">
+
+  <!-- Favicons -->
+  <link rel="icon" href="../img/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="../img/favicon.png">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Test viteză internet Digi - speed test">
+  <meta property="og:description" content="Testează viteza si calitatea conexiunii tale Digi la internet, printr-un instrument interactiv și ușor de utilizat.">
+  <meta property="og:url" content="https://serv.ro/p/rcs-rds.html">
+  <meta property="og:image" content="https://serv.ro/img/og-image.png">
+  <meta property="og:site_name" content="Serv.ro">
+  <meta property="og:locale" content="ro_RO">
+  <meta property="og:locale:alternate" content="en_GB">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Test viteză internet Digi - speed test">
+  <meta name="twitter:description" content="Testează viteza si calitatea conexiunii tale Digi la internet, printr-un instrument interactiv și ușor de utilizat.">
+  <meta name="twitter:image" content="https://serv.ro/img/og-image.png">
+  <meta name="twitter:domain" content="https://serv.ro/">
+  <meta name="twitter:creator" content="Serv.ro">
+
+  <!-- Preconnect / preload -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com">
+  <link rel="preconnect" href="https://api.rss2json.com">
+  <link rel="preconnect" href="https://speedcheck-b.rcs-rds.ro:3001">
+  <link rel="preload" href="../css/style.min.css" as="style">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&amp;display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&amp;display=swap"></noscript>
+  <link rel="stylesheet" href="../css/style.min.css">
+
+  <style>:root{--primary-color:#002bff;}</style>
+
+  <!-- Stiluri vitezometru (folosesc paleta și fontul paginii) -->
+  <style>
+    .speedtest-widget {
+      --st-primary: var(--primary-color, #002bff);
+      --st-ink: #1a1d21;
+      --st-muted: #7d8590;
+      --st-track: #e7eaed;
+      --st-surface: rgba(255,255,255,0.9);
+      --st-border: #edf0f2;
+      font-family: "Inter Tight", sans-serif;
+      color: var(--st-ink);
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 28px 24px 18px;
+      max-width: 760px;
+      margin: 0 auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+    .speedtest-widget * { box-sizing: border-box; }
+    .speedtest-widget .status { text-align: center; font-size: 13px; color: var(--st-muted); height: 18px; margin-bottom: 4px; }
+
+    .speedtest-widget .test-hero { display: flex; gap: 36px; align-items: center; justify-content: center; flex-wrap: wrap; }
+
+    .speedtest-widget .gauge-col { position: relative; width: 260px; flex-shrink: 0; }
+    .speedtest-widget .gauge-readout { position: absolute; left: 0; right: 0; bottom: 40px; text-align: center; }
+    .speedtest-widget .gauge-readout .num { font-size: 36px; font-weight: 400; line-height: 1; }
+    .speedtest-widget .gauge-readout .unit { font-size: 13px; color: var(--st-muted); margin-top: 2px; }
+    .speedtest-widget .gauge-track { fill: none; stroke: var(--st-track); stroke-width: 16; }
+    .speedtest-widget .gauge-progress { fill: none; stroke: var(--st-primary); stroke-width: 16; transition: d 0.4s ease; }
+    .speedtest-widget .gauge-needle { stroke: #33383d; stroke-width: 4; stroke-linecap: round; transition: x2 0.5s cubic-bezier(.34,1.4,.64,1), y2 0.5s cubic-bezier(.34,1.4,.64,1); }
+    .speedtest-widget .gauge-hub { fill: #33383d; }
+    .speedtest-widget .gauge-tick-label { font-family: "Inter Tight", sans-serif; font-size: 12px; fill: var(--st-muted); text-anchor: middle; dominant-baseline: middle; }
+
+    .speedtest-widget .metrics-col { display: flex; flex-direction: column; gap: 20px; min-width: 220px; }
+    .speedtest-widget .mini-stats { display: flex; gap: 26px; }
+    .speedtest-widget .tile .lab { font-size: 11px; color: var(--st-muted); font-weight: 700; text-transform: uppercase; letter-spacing: .03em; margin-bottom: 6px; }
+    .speedtest-widget .tile .val { font-size: 26px; font-weight: 400; line-height: 1; }
+    .speedtest-widget .tile .unit { font-size: 12px; color: var(--st-muted); }
+    .speedtest-widget .chart-stats { display: flex; gap: 14px; }
+    .speedtest-widget .chart-tile { background: var(--st-surface); border: 1px solid var(--st-border); border-radius: 12px; padding: 12px 14px; flex: 1; min-width: 120px; }
+    .speedtest-widget .chart-tile svg { display: block; margin-top: 6px; width: 100%; height: 30px; }
+    .speedtest-widget .chart-tile path { fill: var(--st-primary); opacity: 0.85; }
+
+    .speedtest-widget button#go {
+      display: block; margin: 26px auto 8px;
+      font-family: "Inter Tight", sans-serif; font-weight: 700; font-size: 15px;
+      color: #fff; background: var(--st-primary); border: none; border-radius: 999px;
+      padding: 13px 32px; cursor: pointer; transition: transform .15s ease, opacity .15s ease;
+    }
+    .speedtest-widget button#go:hover { transform: translateY(-1px); }
+    .speedtest-widget button#go:disabled { opacity: .55; cursor: default; transform: none; }
+    .speedtest-widget button#go:focus-visible { outline: 2px solid var(--st-primary); outline-offset: 3px; }
+
+    .speedtest-widget .info-bar {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+      border-top: 1px solid var(--st-border); margin-top: 22px; padding-top: 14px; font-size: 12px; color: var(--st-muted);
+    }
+    .speedtest-widget .info-bar .isp { font-weight: 700; color: var(--st-ink); }
+    .speedtest-widget .info-progress { flex: 1; min-width: 120px; height: 3px; background: var(--st-track); border-radius: 2px; margin: 0 14px; overflow: hidden; }
+    .speedtest-widget .info-progress i { display: block; height: 100%; width: 0%; background: var(--st-primary); transition: width .3s ease; }
+
+    .speedtest-widget .share-row { display: none; gap: 10px; margin-top: 16px; justify-content: center; }
+    .speedtest-widget .share-row button {
+      font-family: "Inter Tight", sans-serif; font-weight: 600; font-size: 13px; color: var(--st-ink);
+      background: var(--st-surface); border: 1px solid var(--st-border); border-radius: 999px; padding: 9px 16px; cursor: pointer;
+    }
+    .speedtest-widget .share-row button.fb { color: #fff; background: var(--st-primary); border-color: var(--st-primary); }
+    .speedtest-widget .share-note { font-size: 11px; color: var(--st-muted); margin-top: 8px; text-align: center; }
+
+    .speedtest-widget .history { margin-top: 26px; border-top: 1px solid var(--st-border); padding-top: 12px; }
+    .speedtest-widget .history h2 { font-size: 12px; font-weight: 700; color: var(--st-muted); text-transform: uppercase; letter-spacing: .03em; margin: 0 0 10px; }
+    .speedtest-widget .history ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .speedtest-widget .history li { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+    .speedtest-widget .h-date { color: var(--st-muted); flex-shrink: 0; }
+    .speedtest-widget .h-isp { color: var(--st-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+    .speedtest-widget .h-icon { color: var(--st-muted); flex-shrink: 0; display: flex; }
+    .speedtest-widget .h-vals { margin-left: auto; flex-shrink: 0; font-weight: 600; }
+
+    @media (max-width: 640px) {
+      .speedtest-widget .test-hero { flex-direction: column; }
+      .speedtest-widget .chart-stats { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .speedtest-widget .gauge-needle, .speedtest-widget .gauge-progress { transition: none; }
+    }
+  </style>
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Acasă", "item": "https://serv.ro/" },
+          { "@type": "ListItem", "position": 2, "name": "Digi", "item": "https://serv.ro/p/rcs-rds.html" }
+        ]
+      },
+      {
+        "@type": "WebPage",
+        "name": "Test viteză internet Digi - speed test",
+        "url": "https://serv.ro/p/rcs-rds.html",
+        "description": "Testează viteza si calitatea conexiunii tale Digi la internet, printr-un instrument interactiv și ușor de utilizat.",
+        "isPartOf": { "@id": "https://serv.ro/#website" },
+        "about": { "@type": "Organization", "name": "Digi" }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LJBSKSB4RL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-LJBSKSB4RL');
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2912050515016663" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <section class="menu menu5 cid-tTTHxBbiog" id="menu-5-tTTHxBbiog">
+    <nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
+      <div class="container">
+        <div class="navbar-brand">
+          <span class="navbar-logo">
+            <a href="../index.html">
+              <img src="../img/favicon.png" alt="Serv.ro" style="height: 4.3rem;">
+            </a>
+          </span>
+          <span class="navbar-caption-wrap">
+            <a class="navbar-caption text-black display-4" href="../index.html">Test viteză internet</a>
+          </span>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Comută navigarea">
+          <div class="hamburger"><span></span><span></span><span></span><span></span></div>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav nav-dropdown">
+          <li class="nav-item"><a class="nav-link link text-black display-4 active" href="rcs-rds.html" aria-current="page">Digi</a></li>
+          <li class="nav-item"><a class="nav-link link text-black display-4" href="orange.html">Orange</a></li>
+          <li class="nav-item"><a class="nav-link link text-black display-4" href="telekom.html">Telekom</a></li>
+          <li class="nav-item"><a class="nav-link link text-black display-4" href="vodafone.html">Vodafone</a></li>
+        </ul>
+          <div class="navbar-buttons mbr-section-btn">
+            <a class="btn btn-primary display-4" href="../index.html">Mobile</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </section>
+
+  <section class="header18 cid-tTTHxBbY3S mbr-fullscreen">
+    <div class="mbr-overlay" style="opacity: 0.3; background-color: rgb(255, 250, 250);"></div>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="content-wrap col-12 col-md-10">
+          <h1 class="mbr-section-title mbr-fonts-style mbr-white mb-4 display-1" style="color:#002bff;">
+            <strong>Digi</strong>
+          </h1>
+          <div class="mbr-fonts-style mbr-text mbr-white mb-4 display-7">
+            <div class="speedtest-widget">
+              <div class="status" id="status">Apasă start pentru a testa conexiunea</div>
+
+              <div class="test-hero">
+                <div class="gauge-col">
+                  <svg id="gaugeSvg" viewBox="0 0 300 300" width="100%">
+                    <path class="gauge-track" id="gaugeTrackPath" d=""/>
+                    <path class="gauge-progress" id="gaugeProgress" d=""/>
+                    <g id="gaugeTicks"></g>
+                    <line class="gauge-needle" id="gaugeNeedle" x1="150" y1="150" x2="150" y2="150"/>
+                    <circle class="gauge-hub" cx="150" cy="150" r="9"/>
+                  </svg>
+                  <div class="gauge-readout">
+                    <div class="num" id="mainNum">0.0</div>
+                    <div class="unit" id="mainLabel">Mbps &middot; Descărcare</div>
+                  </div>
+                </div>
+
+                <div class="metrics-col">
+                  <div class="mini-stats">
+                    <div class="tile">
+                      <div class="lab">Ping</div>
+                      <div><span class="val" id="pingVal">—</span> <span class="unit">ms</span></div>
+                    </div>
+                    <div class="tile">
+                      <div class="lab">Jitter</div>
+                      <div><span class="val" id="jitterVal">—</span> <span class="unit">ms</span></div>
+                    </div>
+                  </div>
+                  <div class="chart-stats">
+                    <div class="chart-tile">
+                      <div class="lab">↓ Download</div>
+                      <div><span class="val" id="downVal">—</span> <span class="unit">Mbps</span></div>
+                      <svg viewBox="0 0 110 34"><path id="downSpark" d=""/></svg>
+                    </div>
+                    <div class="chart-tile">
+                      <div class="lab">↑ Upload</div>
+                      <div><span class="val" id="upVal">—</span> <span class="unit">Mbps</span></div>
+                      <svg viewBox="0 0 110 34"><path id="upSpark" d=""/></svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button id="go">Pornește testul</button>
+
+              <div class="share-row" id="shareRow">
+                <button id="shareBtn" class="fb">Distribuie rezultatul</button>
+                <button id="downloadBtn">Descarcă imaginea</button>
+              </div>
+              <div class="share-note" id="shareNote"></div>
+
+              <div class="info-bar">
+                <span class="isp" id="ispLabel">—</span>
+                <div class="info-progress"><i id="progressBar"></i></div>
+                <span>Testat prin Cloudflare Network</span>
+              </div>
+
+              <div class="history" id="historyBox" style="display:none;">
+                <h2>Ultimele teste</h2>
+                <ul id="historyList"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features4 cid-tTTHxBhMnL" id="service-list-2-tTTHxBhMnL">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 content-head">
+          <div class="mbr-section-head mb-5">
+            <h4 class="mbr-section-title mbr-fonts-style align-center mb-0 display-2"><strong>Utile</strong></h4>
+          </div>
+        </div>
+      </div>
+      <div class="row" data-rss-feed="https://www.volte.ro/feeds/posts/default/-/Digimobil/" data-rss-link-titles="true" data-rss-title-wrapper="h5" data-rss-max="3"></div>
+    </div>
+  </section>
+
+  <section class="footer4 cid-tTTHxBlTxv" id="footer-4-tTTHxBlTxv">
+    <div class="container">
+      <div class="media-container-row align-center mbr-white">
+        <div class="col-12">
+          <p class="mbr-text mb-0 mbr-fonts-style display-7">&copy; 2026 serv.ro. Toate drepturile rezervate.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Logica vitezometrului (adaptată din instrumentul Cloudflare speed test) -->
+  <script type="module">
+    import SpeedTest from "https://cdn.jsdelivr.net/npm/@cloudflare/speedtest@1.3.0/+esm";
+
+    const statusEl = document.getElementById('status');
+    const mainNum = document.getElementById('mainNum');
+    const mainLabel = document.getElementById('mainLabel');
+    const downVal = document.getElementById('downVal');
+    const upVal = document.getElementById('upVal');
+    const pingVal = document.getElementById('pingVal');
+    const jitterVal = document.getElementById('jitterVal');
+    const goBtn = document.getElementById('go');
+    const shareRow = document.getElementById('shareRow');
+    const shareBtn = document.getElementById('shareBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const shareNote = document.getElementById('shareNote');
+    const historyBox = document.getElementById('historyBox');
+    const historyList = document.getElementById('historyList');
+    const ispLabel = document.getElementById('ispLabel');
+    const progressBar = document.getElementById('progressBar');
+    const downSpark = document.getElementById('downSpark');
+    const upSpark = document.getElementById('upSpark');
+
+    let lastResult = null;
+    let netInfo = { isp: null, type: null };
+    let downSamples = [], upSamples = [];
+
+    /* ---------- network / ISP detection ---------- */
+    function detectNetworkType() {
+      const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      if (conn && conn.type) netInfo.type = conn.type;
+    }
+    async function detectIsp() {
+      try {
+        const res = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
+        if (data && data.org) { netInfo.isp = data.org; ispLabel.textContent = data.org; }
+      } catch (e) { console.warn('[servro] ISP lookup failed:', e); }
+    }
+    async function detectNetworkClass() {
+      if (netInfo.type) return;
+      try {
+        const res = await fetch('https://api.ipapi.is/');
+        const data = await res.json();
+        const hay = `${data.company || ''} ${data.asn || ''}`.toLowerCase();
+        netInfo.type = /mobile|wireless|cellular/.test(hay) ? 'cellular' : 'wifi';
+      } catch (e) { console.warn('[servro] network-class lookup failed:', e); }
+    }
+    detectNetworkType(); detectIsp(); detectNetworkClass();
+
+    const ICON_WIFI = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 8.5a17 17 0 0 1 20 0"/><path d="M5.5 12.5a12 12 0 0 1 13 0"/><path d="M9 16.5a6.5 6.5 0 0 1 6 0"/><circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/></svg>';
+    const ICON_CELL = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="14" width="3" height="6"/><rect x="8.5" y="10" width="3" height="10"/><rect x="14" y="6" width="3" height="14"/><rect x="19.5" y="2" width="3" height="18"/></svg>';
+    function networkIcon(type) {
+      if (type === 'cellular') return ICON_CELL;
+      if (type === 'wifi' || type === 'ethernet' || type === 'other' || type === 'wimax') return ICON_WIFI;
+      return '';
+    }
+
+    /* ---------- history (localStorage) ---------- */
+    function loadHistory() {
+      try { const raw = localStorage.getItem('servro_speedtest_history'); return raw ? JSON.parse(raw) : []; }
+      catch { return []; }
+    }
+    function saveHistory(entry) {
+      try {
+        const list = loadHistory();
+        list.unshift(entry);
+        localStorage.setItem('servro_speedtest_history', JSON.stringify(list.slice(0, 5)));
+      } catch {}
+    }
+    function renderHistory() {
+      const list = loadHistory();
+      if (!list.length) return;
+      historyBox.style.display = 'block';
+      historyList.innerHTML = list.map(e => {
+        const icon = networkIcon(e.netType);
+        const isp = e.isp ? `<span class="h-isp">${e.isp}</span>` : '';
+        return `<li>
+          <span class="h-date">${e.date}</span>
+          ${isp}
+          ${icon ? `<span class="h-icon">${icon}</span>` : ''}
+          <span class="h-vals">↓ ${e.down} · ↑ ${e.up} Mbps</span>
+        </li>`;
+      }).join('');
+    }
+
+    /* ---------- gauge geometry ---------- */
+    const CX = 150, CY = 150, R_TRACK = 120, R_NEEDLE = 96, R_LABEL = 145;
+    const START_DEG = 225, END_DEG = -45, SWEEP = 270;
+    const TICKS = [0, 10, 25, 50, 100, 150, 200, 350, 500];
+    const SCALE_TIERS = [1, 2, 5, 10, 20, 50, 100];
+    let scale = 1;
+
+    function polar(deg, r) {
+      const rad = deg * Math.PI / 180;
+      return { x: CX + r * Math.cos(rad), y: CY - r * Math.sin(rad) };
+    }
+    function arcPath(d1, d2, r) {
+      const p0 = polar(d1, r), p1 = polar(d2, r);
+      const large = Math.abs(d1 - d2) > 180 ? 1 : 0;
+      return `M${p0.x.toFixed(1)},${p0.y.toFixed(1)} A${r},${r} 0 ${large} 1 ${p1.x.toFixed(1)},${p1.y.toFixed(1)}`;
+    }
+    function angleFor(v) {
+      const tier = SCALE_TIERS.find(s => v < 500 * s * 0.85) || SCALE_TIERS.at(-1);
+      if (tier > scale) { scale = tier; renderTicks(); }
+      const ticks = TICKS.map(x => x * scale);
+      if (v <= 0) return START_DEG;
+      if (v >= ticks.at(-1)) return END_DEG;
+      for (let i = 0; i < ticks.length - 1; i++) {
+        if (v >= ticks[i] && v < ticks[i + 1]) {
+          const frac = (v - ticks[i]) / (ticks[i + 1] - ticks[i]);
+          return START_DEG - (i + frac) * (SWEEP / (ticks.length - 1));
+        }
+      }
+      return END_DEG;
+    }
+    function renderTicks() {
+      const g = document.getElementById('gaugeTicks');
+      g.innerHTML = '';
+      const step = SWEEP / (TICKS.length - 1);
+      TICKS.forEach((t, i) => {
+        const deg = START_DEG - i * step;
+        const p = polar(deg, R_LABEL);
+        const el = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        el.setAttribute('x', p.x.toFixed(1));
+        el.setAttribute('y', p.y.toFixed(1));
+        el.setAttribute('class', 'gauge-tick-label');
+        el.textContent = t * scale;
+        g.appendChild(el);
+      });
+    }
+    document.getElementById('gaugeTrackPath').setAttribute('d', arcPath(START_DEG, END_DEG, R_TRACK));
+    renderTicks();
+
+    function setGauge(value) {
+      const deg = angleFor(value);
+      const tip = polar(deg, R_NEEDLE);
+      document.getElementById('gaugeNeedle').setAttribute('x2', tip.x.toFixed(1));
+      document.getElementById('gaugeNeedle').setAttribute('y2', tip.y.toFixed(1));
+      document.getElementById('gaugeProgress').setAttribute('d', arcPath(START_DEG, deg, R_TRACK));
+    }
+    function resetGauge() {
+      scale = 1;
+      renderTicks();
+      document.getElementById('gaugeProgress').setAttribute('d', arcPath(START_DEG, START_DEG, R_TRACK));
+      const tip = polar(START_DEG, R_NEEDLE);
+      document.getElementById('gaugeNeedle').setAttribute('x2', tip.x.toFixed(1));
+      document.getElementById('gaugeNeedle').setAttribute('y2', tip.y.toFixed(1));
+    }
+
+    function sparkPath(samples, w, h) {
+      if (!samples.length) return '';
+      const max = Math.max(...samples, 1);
+      const step = w / Math.max(samples.length - 1, 1);
+      let d = `M0,${h}`;
+      samples.forEach((s, i) => { d += ` L${(i * step).toFixed(1)},${(h - (s / max) * h * 0.9).toFixed(1)}`; });
+      d += ` L${w},${h} Z`;
+      return d;
+    }
+
+    function mbps(bps) { return bps ? (bps / 1e6).toFixed(1) : '0.0'; }
+
+    /* ---------- share / download (imaginea e generată de Cloudflare Worker) ---------- */
+    function shareParams({ down, up, lat }) {
+      return `dl=${encodeURIComponent(down)}&ul=${encodeURIComponent(up)}&ping=${encodeURIComponent(lat)}`;
+    }
+
+    downloadBtn.addEventListener('click', async () => {
+      if (!lastResult) return;
+      try {
+        const res = await fetch(`/share/og-image?${shareParams(lastResult)}`);
+        const blob = await res.blob();
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'test-viteza-digi-servro.png';
+        a.click();
+      } catch (e) {
+        shareNote.textContent = 'Nu am putut genera imaginea, încearcă din nou.';
+      }
+    });
+
+    shareBtn.addEventListener('click', () => {
+      if (!lastResult) return;
+      // Facebook va citi og:image de la acest URL (generat dinamic de Worker)
+      const shareUrl = `${location.origin}/share/?${shareParams(lastResult)}`;
+      window.open(
+        `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+        '_blank', 'noopener,width=600,height=520'
+      );
+    });
+
+    /* ---------- test run ---------- */
+    const measurements = [
+      { type: 'latency', numPackets: 1 },
+      { type: 'download', bytes: 1e5, count: 1, bypassMinDuration: true },
+      { type: 'latency', numPackets: 20 },
+      { type: 'download', bytes: 1e5, count: 9 },
+      { type: 'download', bytes: 1e6, count: 8 },
+      { type: 'upload', bytes: 1e5, count: 8 },
+      { type: 'upload', bytes: 1e6, count: 6 },
+      { type: 'download', bytes: 1e7, count: 6 },
+      { type: 'upload', bytes: 1e7, count: 4 },
+      { type: 'download', bytes: 2.5e7, count: 4 },
+      { type: 'upload', bytes: 2.5e7, count: 4 },
+      { type: 'download', bytes: 1e8, count: 3 },
+      { type: 'upload', bytes: 5e7, count: 3 },
+      { type: 'download', bytes: 2.5e8, count: 2 }
+    ];
+    const totalSteps = measurements.length;
+    let stepCount = 0;
+
+    function runTest() {
+      goBtn.disabled = true; goBtn.textContent = 'Se testează…';
+      resetGauge();
+      downSamples = []; upSamples = []; stepCount = 0;
+      downSpark.setAttribute('d', ''); upSpark.setAttribute('d', '');
+      mainLabel.textContent = 'Mbps · Latență';
+      statusEl.textContent = 'Se măsoară latența conexiunii…';
+      downVal.textContent = '—'; upVal.textContent = '—'; pingVal.textContent = '—'; jitterVal.textContent = '—';
+      progressBar.style.width = '0%';
+
+      const test = new SpeedTest({ autoStart: false, measurements });
+
+      test.onResultsChange = ({ type }) => {
+        stepCount++;
+        progressBar.style.width = Math.min(100, (stepCount / totalSteps) * 100) + '%';
+        if (type === 'latency') {
+          const lat = test.results.getUnloadedLatency();
+          const jit = test.results.getUnloadedJitter ? test.results.getUnloadedJitter() : null;
+          if (lat) pingVal.textContent = Math.round(lat);
+          if (jit) jitterVal.textContent = Math.round(jit);
+        }
+        if (type === 'download') {
+          mainLabel.textContent = 'Mbps · Descărcare';
+          statusEl.textContent = 'Se testează viteza de descărcare…';
+          const bw = test.results.getDownloadBandwidth();
+          if (bw) {
+            const v = parseFloat(mbps(bw));
+            mainNum.textContent = v.toFixed(1); downVal.textContent = v.toFixed(1);
+            setGauge(v);
+            downSamples.push(v); downSpark.setAttribute('d', sparkPath(downSamples, 110, 34));
+          }
+        }
+        if (type === 'upload') {
+          mainLabel.textContent = 'Mbps · Încărcare';
+          statusEl.textContent = 'Se testează viteza de încărcare…';
+          const bw = test.results.getUploadBandwidth();
+          if (bw) {
+            const v = parseFloat(mbps(bw));
+            mainNum.textContent = v.toFixed(1); upVal.textContent = v.toFixed(1);
+            setGauge(v);
+            upSamples.push(v); upSpark.setAttribute('d', sparkPath(upSamples, 110, 34));
+          }
+        }
+      };
+
+      test.onFinish = (results) => {
+        const down = mbps(results.getDownloadBandwidth());
+        const up = mbps(results.getUploadBandwidth());
+        const lat = Math.round(results.getUnloadedLatency() || 0);
+        downVal.textContent = down; upVal.textContent = up; pingVal.textContent = lat;
+        mainNum.textContent = up; mainLabel.textContent = 'Mbps · Încărcare';
+        setGauge(parseFloat(up));
+        statusEl.textContent = 'Test finalizat';
+        goBtn.disabled = false; goBtn.textContent = 'Testează din nou';
+        progressBar.style.width = '100%';
+
+        saveHistory({
+          date: new Date().toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit' }) + ' ' +
+                new Date().toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' }),
+          down, up, isp: netInfo.isp, netType: netInfo.type
+        });
+        renderHistory();
+
+        lastResult = { down, up, lat };
+        shareRow.style.display = 'flex';
+        shareNote.textContent = '';
+      };
+
+      test.onError = () => {
+        statusEl.textContent = 'A apărut o eroare, încearcă din nou.';
+        resetGauge();
+        goBtn.disabled = false; goBtn.textContent = 'Testează din nou';
+      };
+
+      test.play();
+    }
+
+    goBtn.addEventListener('click', runTest);
+    renderHistory();
+  </script>
+
+  <script src="../js/script.min.js" defer></script>
+</body>
+</html>
