@@ -605,65 +605,36 @@
     ];
     /* ---------- bara de progres cu punct (stânga = start test, dreapta = final) ---------- */
     /* PROGRESS-MODEL-START */
-    // Greutatea fiecărei cereri = secundele estimate la o viteză de referință. În interiorul unei cereri,
-    // punctul avansează după ceas (estimarea se corectează din cererile deja încheiate), deci nu stă pe loc.
-    // Când o cerere mare durează > ~1s, biblioteca renunță la măsurătorile și mai mari din același sens:
-    // le scoatem din total ca să nu rămână punctul „blocat" înainte de final.
-    const REF_SPEED = 300e6, C0 = 0.12, C_LAT = 0.04, SKIP_AFTER_S = 1.1;
-    function createProgressModel(measurements) {
-      const seq = [];
-      measurements.forEach((m, mid) => {
-        const n = m.type === 'latency' ? m.numPackets : m.count;
-        const w = m.type === 'latency' ? C_LAT : C0 + m.bytes * 8 / REF_SPEED;
-        for (let i = 0; i < n; i++) seq.push({ type: m.type, bytes: m.bytes || 0, w, mid, skipped: false });
-      });
-      const totalW = seq.reduce((a, e) => a + e.w, 0);
-      let k = 0, doneW = 0, skipW = 0, tLast = 0, ratio = 1;
-      const soft = x => (x <= 0.8 ? x : 0.8 + 0.15 * (1 - Math.exp(-(x - 0.8) / 0.3)));
-      const norm = () => { while (k < seq.length && seq[k].skipped) k++; };
-      const unskip = type => seq.forEach(e => { if (e.skipped && e.type === type) { e.skipped = false; skipW -= e.w; } });
-      const findNext = type => { let j = k; while (j < seq.length && (seq[j].skipped || seq[j].type !== type)) j++; return j; };
-      // Totalul estimat: ce s-a făcut + ce mai rămâne, fără măsurătorile pe care biblioteca le va sări
-      // (viteza estimată din ritmul de până acum; peste ~1s pe cerere, măsurătorile mai mari nu se mai rulează)
-      function predictedTotal() {
-        const S = Math.max(5e6, REF_SPEED / ratio);
-        const finalMid = {};
-        let total = doneW;
-        for (let i = k; i < seq.length; i++) {
-          const e = seq[i];
-          if (e.skipped) continue;
-          if (e.type !== 'latency') {
-            if (finalMid[e.type] !== undefined && e.mid > finalMid[e.type]) continue;
-            if (e.bytes >= 1e6 && finalMid[e.type] === undefined && e.bytes * 8 / S >= 1) finalMid[e.type] = e.mid;
-          }
-          total += e.w;
-        }
-        return total;
+    // Progresul urmează ceasul: durata totală se estimează din lista de măsurători și din viteza măsurată
+    // (nu depinde de câte evenimente declanșează biblioteca). Estimarea se corectează pe parcurs, iar punctul
+    // nu merge niciodată înapoi și nu se oprește complet nici dacă testul durează mai mult decât s-a estimat.
+    const C0 = 0.12, C_LAT = 0.04, STARTUP = 0.4, DEFAULT_SPEED = 300e6, TRUST_AFTER_S = 3;
+    function predictDuration(measurements, speeds) {
+      let t = STARTUP;
+      const done = { download: false, upload: false };
+      for (const m of measurements) {
+        if (m.type === 'latency') { t += m.numPackets * C_LAT; continue; }
+        if (done[m.type]) continue;                       // biblioteca sare peste măsurătorile mai mari
+        const other = m.type === 'download' ? 'upload' : 'download';
+        const S = Math.max(speeds[m.type] || speeds[other] || DEFAULT_SPEED, 1e6);
+        const net = m.bytes * 8 / S;
+        t += m.count * (C0 + net);
+        if (net >= 1) done[m.type] = true;                // cereri de peste ~1s: ultima măsurătoare din acest sens
       }
+      return t;
+    }
+    function createProgressModel(measurements) {
+      const speeds = { download: 0, upload: 0 };
+      let t0 = 0, total = predictDuration(measurements, speeds);
+      const map = x => (x <= 0.9 ? x : 0.9 + 0.07 * (1 - Math.exp(-(x - 0.9) / 0.2)));
       return {
-        start(now) { seq.forEach(e => { e.skipped = false; }); k = 0; doneW = 0; skipW = 0; tLast = now; ratio = 1; },
-        result(type, now) {
-          let j = findNext(type);
-          if (j >= seq.length) { unskip(type); norm(); j = findNext(type); }   // am sărit prea devreme: reluăm
-          if (j >= seq.length) return;
-          for (; k < j; k++) if (!seq[k].skipped) doneW += seq[k].w;          // cereri sărite de bibliotecă
-          const it = seq[k], dur = (now - tLast) / 1000;
-          if (it.bytes >= 1e6) ratio = Math.min(20, Math.max(0.2, 0.5 * ratio + 0.5 * dur / it.w));
-          doneW += it.w; k++; tLast = now;
-          if (it.bytes >= 1e6 && dur >= SKIP_AFTER_S) {
-            for (let i = k; i < seq.length; i++) {
-              const e = seq[i];
-              if (e.type === type && e.mid > it.mid && !e.skipped) { e.skipped = true; skipW += e.w; }
-            }
-          }
-          norm();
+        start(now) { t0 = now; speeds.download = 0; speeds.upload = 0; total = predictDuration(measurements, speeds); },
+        speed(type, bps, now) {
+          if (!(bps > 0) || (now - t0) / 1000 < TRUST_AFTER_S) return;   // la început citirile sunt prea mici
+          speeds[type] = Math.max(speeds[type], bps);                    // citirile timpurii subestimează: doar creștem
+          total = 0.5 * total + 0.5 * predictDuration(measurements, speeds);
         },
-        value(now) {
-          const it = seq[k];
-          if (!it) return 0.97;
-          const x = (now - tLast) / 1000 / (it.w * ratio);
-          return Math.min(0.97, (doneW + soft(x) * it.w) / predictedTotal());
-        }
+        value(now) { return Math.min(0.97, map((now - t0) / 1000 / total)); }
       };
     }
     /* PROGRESS-MODEL-END */
@@ -688,7 +659,6 @@
       progressModel.start(performance.now());
       progRaf = requestAnimationFrame(progressFrame);
     }
-    function registerResult(type) { progressModel.result(type, performance.now()); }
     function finishProgress() {
       progFinishing = true;
       if (!progRaf) progRaf = requestAnimationFrame(progressFrame);
@@ -713,7 +683,6 @@
       const test = new SpeedTest({ autoStart: false, measurements });
 
       test.onResultsChange = ({ type }) => {
-        registerResult(type);
         if (type === 'latency') {
           const lat = test.results.getUnloadedLatency();
           const jit = test.results.getUnloadedJitter ? test.results.getUnloadedJitter() : null;
@@ -725,6 +694,7 @@
           statusEl.textContent = 'Se testează viteza de descărcare…';
           const bw = test.results.getDownloadBandwidth();
           if (bw) {
+            progressModel.speed('download', bw, performance.now());
             const v = parseFloat(mbps(bw));
             numDl.textContent = v.toFixed(1); downVal.textContent = v.toFixed(1);
             setRing('dl', v);
@@ -736,6 +706,7 @@
           statusEl.textContent = 'Se testează viteza de încărcare…';
           const bw = test.results.getUploadBandwidth();
           if (bw) {
+            progressModel.speed('upload', bw, performance.now());
             const v = parseFloat(mbps(bw));
             numUl.textContent = v.toFixed(1); upVal.textContent = v.toFixed(1);
             setRing('ul', v);
