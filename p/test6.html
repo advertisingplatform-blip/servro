@@ -603,8 +603,17 @@
       { type: 'upload', bytes: 5e7, count: 3 },
       { type: 'download', bytes: 2.5e8, count: 2 }
     ];
-    const totalSteps = measurements.length;
-    let stepCount = 0;
+    // Biblioteca declanșează onResultsChange la FIECARE cerere încheiată (nu o dată per măsurătoare),
+    // așa că progresul se calculează din evenimentele așteptate, cu pondere mai mare pentru cererile mari.
+    const eventWeights = { latency: [], download: [], upload: [] };
+    measurements.forEach(m => {
+      const n = m.type === 'latency' ? m.numPackets : m.count;
+      const w = m.type === 'latency' ? 0.3 : 1 + Math.log10(m.bytes / 1e5);
+      for (let i = 0; i < n; i++) eventWeights[m.type].push(w);
+    });
+    const totalWeight = Object.values(eventWeights).flat().reduce((a, b) => a + b, 0);
+    let eventIdx = { latency: 0, download: 0, upload: 0 };
+    let doneWeight = 0;
 
     /* ---------- bara de progres cu punct (stânga = start test, dreapta = final) ---------- */
     let prog = 0, progTarget = 0, progRaf = null;
@@ -633,7 +642,8 @@
       goBtn.disabled = true; goBtn.textContent = 'Se testează…';
       resetGauge();
       setActive(null);
-      downSamples = []; upSamples = []; stepCount = 0;
+      downSamples = []; upSamples = [];
+      eventIdx = { latency: 0, download: 0, upload: 0 }; doneWeight = 0;
       downSpark.setAttribute('d', ''); upSpark.setAttribute('d', '');
       statusEl.textContent = 'Se măsoară latența conexiunii…';
       downVal.textContent = '—'; upVal.textContent = '—'; pingVal.textContent = '—'; jitterVal.textContent = '—';
@@ -644,9 +654,13 @@
       const test = new SpeedTest({ autoStart: false, measurements });
 
       test.onResultsChange = ({ type }) => {
-        stepCount++;
-        // punctul înaintează cu fiecare măsurătoare încheiată și se strecoară încet spre următoarea
-        setProgress(Math.min(0.97, (stepCount + 0.7) / totalSteps));
+        // punctul înaintează cu fiecare cerere încheiată și se strecoară spre următoarea
+        const list = eventWeights[type];
+        if (list) {
+          const i = eventIdx[type]++;
+          doneWeight += list[i] || 0;
+          setProgress(Math.min(0.97, (doneWeight + 0.5 * (list[i + 1] || 0)) / totalWeight));
+        }
         if (type === 'latency') {
           const lat = test.results.getUnloadedLatency();
           const jit = test.results.getUnloadedJitter ? test.results.getUnloadedJitter() : null;
