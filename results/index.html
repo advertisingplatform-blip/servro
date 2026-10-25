@@ -10,15 +10,15 @@
   <link rel="canonical" href="https://serv.ro/">
 
   <!-- Favicons -->
-  <link rel="icon" href="img/favicon.png" type="image/png">
-  <link rel="apple-touch-icon" href="img/favicon.png">
+  <link rel="icon" href="https://serv.ro/img/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="https://serv.ro/img/favicon.png">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Test viteză internet - speed test">
   <meta property="og:description" content="Testează viteza si calitatea conexiunii tale la internet, printr-un instrument interactiv și ușor de utilizat.">
-  <meta property="og:url" content="https://serv.ro/">
-  <meta property="og:image" content="https://serv.ro/img/og-image.png">
+  <meta property="og:url" content="https\://serv.ro/">
+  <meta property="og:image" content="https\://serv.ro/img/og-image.png">
   <meta property="og:site_name" content="Serv.ro">
   <meta property="og:locale" content="ro_RO">
   <meta property="og:locale:alternate" content="en_GB">
@@ -27,23 +27,23 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Test viteză internet - speed test">
   <meta name="twitter:description" content="Testează viteza si calitatea conexiunii tale la internet, printr-un instrument interactiv și ușor de utilizat.">
-  <meta name="twitter:image" content="https://serv.ro/img/og-image.png">
-  <meta name="twitter:domain" content="https://serv.ro/">
+  <meta name="twitter:image" content="https\://serv.ro/img/og-image.png">
+  <meta name="twitter:domain" content="https\://serv.ro/">
   <meta name="twitter:creator" content="Serv.ro">
 
   <!-- Preconnect / preload -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://www.googletagmanager.com">
-  <link rel="preconnect" href="https://pagead2.googlesyndication.com">
-  <link rel="preconnect" href="https://api.rss2json.com">
-  <link rel="preconnect" href="https://openspeedtest.com">
-  <link rel="preload" href="css/style.min.css" as="style">
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&amp;display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&amp;display=swap"></noscript>
-  <link rel="stylesheet" href="css/style.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+  <link rel="preconnect" href="https://www.googletagmanager.com/">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com/">
+  <link rel="preconnect" href="https://api.rss2json.com/">
+  <link rel="preconnect" href="https://openspeedtest.com/">
+  <link rel="preload" href="https://serv.ro/css/style.min.css" as="style">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700\&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https\://fonts.googleapis.com/css2?family=Inter+Tight:wght\@400;700&display=swap"></noscript>
+  <link rel="stylesheet" href="https://serv.ro/css/style.min.css">
 
-  <style>:root{--primary-color:#002bff;}</style>
+  <style>:root{--primary-color:#14b0fe;}</style>
 
   <!-- Stiluri vitezometru (folosesc paleta și fontul paginii) -->
   <style>
@@ -154,23 +154,23 @@
   <!-- Schema.org -->
   <script type="application/ld+json">
   {
-    "@context": "https://schema.org",
+    "@context": "https\://schema.org",
     "@graph": [
       {
         "@type": "WebSite",
-        "@id": "https://serv.ro/#website",
-        "url": "https://serv.ro/",
+        "@id": "https\://serv.ro/#website",
+        "url": "https\://serv.ro/",
         "name": "Serv.ro",
         "inLanguage": "ro-RO"
       },
       {
         "@type": "WebApplication",
         "name": "Test viteză internet - Serv.ro",
-        "url": "https://serv.ro/",
+        "url": "https\://serv.ro/",
         "description": "Testează viteza si calitatea conexiunii tale la internet, printr-un instrument interactiv și ușor de utilizat.",
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "Any",
-        "isPartOf": { "@id": "https://serv.ro/#website" },
+        "isPartOf": { "@id": "https\://serv.ro/#website" },
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "RON" }
       }
     ]
@@ -307,6 +307,20 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M14 5l7 7-7 7v-4.2c-5.2 0-8.7 1.5-11 5.2 1-5.4 4.4-9.8 11-10.8V5z"/></svg>
                   <span>Distribuie</span>
                 </button>
+              </div>
+
+              <div class="info-bar">
+                <div class="isp-block">
+                  <span class="isp" id="ispLabel">—</span>
+                  <span class="ip" id="ipLabel"></span>
+                </div>
+                <div class="info-progress"><i id="progressBar"></i><span id="progressDot"></span></div>
+                <span>Testat prin Cloudflare Network</span>
+              </div>
+
+              <div class="history" id="historyBox" style="display:none;">
+                <h2>Ultimele teste</h2>
+                <ul id="historyList"></ul>
               </div>
             </div>
           </div>
