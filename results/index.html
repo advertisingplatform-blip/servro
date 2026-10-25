@@ -7,7 +7,7 @@
   <meta name="description" content="Testează viteza si calitatea conexiunii tale la internet, printr-un instrument interactiv și ușor de utilizat.">
   <meta name="keywords" content="Test viteză internet mobile, speed test, ora exacta">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-  <link rel="canonical" href="https://serv.ro/results/index.html?dl=64.2&amp;ul=125.6&amp;ping=28&amp;jitter=6">
+  <link rel="canonical" href="https://serv.ro/results/index.html">
 
   <!-- Favicons -->
   <link rel="icon" href="../img/favicon.png" type="image/png">
@@ -17,8 +17,8 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="Test viteză internet - speed test">
   <meta property="og:description" content="Testează viteza si calitatea conexiunii tale la internet, printr-un instrument interactiv și ușor de utilizat.">
-  <meta property="og:url" content="https://serv.ro//index.html?dl=64.2&amp;ul=125.6&amp;ping=28&amp;jitter=6">
-  <meta property="og:image" content="http://serv.ro/share/og-image?dl=64.2&amp;ul=125.6&amp;ping=28&amp;jitter=6">
+  <meta property="og:url" content="https://serv.ro/results/index.html">
+  <meta property="og:image" content="https://serv.ro/img/og-image.png">
   <meta property="og:site_name" content="Serv.ro">
   <meta property="og:locale" content="ro_RO">
   <meta property="og:locale:alternate" content="en_GB">
@@ -27,7 +27,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Test viteză internet - speed test">
   <meta name="twitter:description" content="Testează viteza si calitatea conexiunii tale la internet, printr-un instrument interactiv și ușor de utilizat.">
-  <meta name="twitter:image" content="http://serv.ro/share/og-image?dl=64.2&amp;ul=125.6&amp;ping=28&amp;jitter=6">
+  <meta name="twitter:image" content="https://serv.ro/img/og-image.png">
   <meta name="twitter:domain" content="serv.ro">
   <meta name="twitter:creator" content="Serv.ro">
 
@@ -158,14 +158,14 @@
       {
         "@type": "WebSite",
         "@id": "https://serv.ro/#website",
-        "url": "https://serv.ro/results/index.html?dl=64.2&ul=125.6&ping=28&jitter=6",
+        "url": "https://serv.ro/results/index.html",
         "name": "Serv.ro",
         "inLanguage": "ro-RO"
       },
       {
         "@type": "WebApplication",
         "name": "Test viteză internet - Serv.ro",
-        "url": "https://serv.ro/results/index.html?dl=64.2&ul=125.6&ping=28&jitter=6",
+        "url": "https://serv.ro/results/index.html",
         "description": "Testează viteza si calitatea conexiunii tale la internet, printr-un instrument interactiv și ușor de utilizat.",
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "Any",
@@ -174,6 +174,48 @@
       }
     ]
   }
+  </script>
+
+  <!-- Înlocuiește valorile din canonical, og:url, og:image, twitter:image și Schema.org
+       cu dl, ul, ping și jitter exact așa cum apar în URL (ex: ?dl=34&ul=86&ping=34&jitter=5).
+       Rulează imediat, înainte de orice altceva, ca să nu depindă de scripturile externe. -->
+  <script>
+    (function () {
+      var p = new URLSearchParams(location.search);
+      var keys = ['dl', 'ul', 'ping', 'jitter'];
+      var ok = keys.every(function (k) {
+        var v = p.get(k);
+        return v !== null && v.trim() !== '' && isFinite(Number(v)) && Number(v) >= 0;
+      });
+      if (!ok) return;
+
+      var qs = keys.map(function (k) { return k + '=' + encodeURIComponent(p.get(k).trim()); }).join('&');
+      var pageUrl = location.origin + location.pathname + '?' + qs;
+      var imageUrl = 'https://serv.ro/share/og-image?' + qs;
+
+      function setAttr(sel, attr, val) {
+        var el = document.querySelector(sel);
+        if (el) el.setAttribute(attr, val);
+      }
+      setAttr('link[rel="canonical"]', 'href', pageUrl);
+      setAttr('meta[property="og:url"]', 'content', pageUrl);
+      setAttr('meta[property="og:image"]', 'content', imageUrl);
+      setAttr('meta[name="twitter:image"]', 'content', imageUrl);
+
+      var schemaEl = document.querySelector('script[type="application/ld+json"]');
+      if (schemaEl) {
+        try {
+          var schema = JSON.parse(schemaEl.textContent);
+          (schema['@graph'] || []).forEach(function (item) {
+            if (item['@type'] === 'WebSite' || item['@type'] === 'WebApplication') {
+              item.url = pageUrl;
+              item.image = imageUrl;
+            }
+          });
+          schemaEl.textContent = JSON.stringify(schema);
+        } catch (e) { /* păstrăm Schema.org implicit */ }
+      }
+    })();
   </script>
 
   <!-- Google tag (gtag.js) -->
@@ -339,7 +381,7 @@
 
   <!-- Logica vitezometrului (adaptată din instrumentul Cloudflare speed test) -->
   <script type="module">
-    import SpeedTest from "https://cdn.jsdelivr.net/npm/@cloudflare/speedtest\@1.3.0/+esm";
+    import SpeedTest from "https://cdn.jsdelivr.net/npm/@cloudflare/speedtest@1.3.0/+esm";
 
     const statusEl = document.getElementById('status');
     const numDl = document.getElementById('numDl');
@@ -476,7 +518,7 @@
       const step = SWEEP / (TICKS.length - 1);
       TICK_LABELS.forEach((label, i) => {
         const p = polar(START_DEG - i * step, R_LABEL);
-        const el = document.createElementNS('http\://www.w3.org/2000/svg', 'text');
+        const el = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         el.setAttribute('x', p.x.toFixed(1));
         el.setAttribute('y', p.y.toFixed(1));
         el.setAttribute('class', 'gauge-tick-label');
@@ -552,7 +594,10 @@
 
     shareBtn.addEventListener('click', async () => {
       if (!lastResult) return;
-      const shareUrl = `${location.origin}/results/index.html?${shareParams(lastResult)}`;
+      // pe pagina unui rezultat se distribuie exact linkul curent, cu aceleași valori din URL
+      const shareUrl = lastResult.query
+        ? `${location.origin}${location.pathname}?${lastResult.query}`
+        : `${location.origin}/results/index.html?${shareParams(lastResult)}`;
       const text = `Am obținut ${Math.round(parseFloat(lastResult.down))} Mbps descărcare / ${Math.round(parseFloat(lastResult.up))} Mbps încărcare la testul de pe serv.ro`;
       // pe telefon (și unde există) se deschide meniul de share al sistemului
       if (navigator.share) {
@@ -599,7 +644,7 @@
         const S = Math.max(speeds[m.type] || speeds[other] || DEFAULT_SPEED, 1e6);
         const net = m.bytes * 8 / S;
         t += m.count * (C0 + net);
-        if (net >= 1) done[m.type] = true;                // cereri de peste \~1s: ultima măsurătoare din acest sens
+        if (net >= 1) done[m.type] = true;                // cereri de peste ~1s: ultima măsurătoare din acest sens
       }
       return t;
     }
@@ -730,7 +775,8 @@
     }
 
     // Dacă pagina este deschisă cu parametrii unui rezultat, afișăm valorile din URL.
-    // Exemplu: ?dl=64.2&ul=125.6&ping=28&jitter=6
+    // Exemplu: ?dl=34&ul=86&ping=34&jitter=5
+    // (canonical, og:url, og:image, twitter:image și Schema.org se actualizează din scriptul din <head>)
     const resultParams = new URLSearchParams(window.location.search);
     const resultValues = {
       down: resultParams.get('dl'),
@@ -741,45 +787,6 @@
     const hasSharedResult = Object.values(resultValues).every(
       value => value !== null && value.trim() !== '' && Number.isFinite(Number(value)) && Number(value) >= 0
     );
-
-    // Actualizăm URL-urile paginii, Open Graph, Twitter și Schema.org în funcție de rezultatul din query string.
-    // Notă: roboții social media care nu execută JavaScript vor vedea valorile statice din HTML.
-    if (hasSharedResult) {
-      const canonicalUrl = `${location.origin}/results/index.html?${new URLSearchParams({
-        dl: Number(resultValues.down).toFixed(1),
-        ul: Number(resultValues.up).toFixed(1),
-        ping: String(Number(resultValues.ping)),
-        jitter: String(Number(resultValues.jitter))
-      }).toString()}`;
-      const imageUrl = `http://serv.ro/share/og-image?${new URLSearchParams({
-        dl: Number(resultValues.down).toFixed(1),
-        ul: Number(resultValues.up).toFixed(1),
-        ping: String(Number(resultValues.ping)),
-        jitter: String(Number(resultValues.jitter))
-      }).toString()}`;
-      const setMeta = (selector, value) => {
-        const element = document.querySelector(selector);
-        if (element) element.setAttribute('content', value);
-      };
-      const canonical = document.querySelector('link[rel="canonical"]');
-      if (canonical) canonical.setAttribute('href', canonicalUrl);
-      setMeta('meta[property="og:url"]', canonicalUrl);
-      setMeta('meta[property="og:image"]', imageUrl);
-      setMeta('meta[name="twitter:image"]', imageUrl);
-      const schemaScript = document.querySelector('script[type="application/ld+json"]');
-      if (schemaScript) {
-        try {
-          const schema = JSON.parse(schemaScript.textContent);
-          for (const item of (schema['@graph'] || [])) {
-            if (item['@type'] === 'WebSite' || item['@type'] === 'WebApplication') {
-              item.url = canonicalUrl;
-              item.image = imageUrl;
-            }
-          }
-          schemaScript.textContent = JSON.stringify(schema);
-        } catch (error) { /* păstrăm Schema.org dacă JSON-ul nu poate fi procesat */ }
-      }
-    }
 
     if (hasSharedResult) {
       const down = Number(resultValues.down);
@@ -806,7 +813,11 @@
       statusEl.textContent = 'Rezultatul testului de viteză';
       goBtn.textContent = 'Testează din nou';
       shareBtn.style.display = 'inline-flex';
-      lastResult = { down: down.toFixed(1), up: up.toFixed(1), lat: ping, jitter };
+      lastResult = {
+        down: down.toFixed(1), up: up.toFixed(1), lat: ping, jitter,
+        // valorile exact cum apar în URL, pentru linkul de distribuire
+        query: ['dl', 'ul', 'ping', 'jitter'].map(k => `${k}=${encodeURIComponent(resultParams.get(k).trim())}`).join('&')
+      };
     }
 
     // Pe pagina unui rezultat distribuit, „Testează din nou” deschide pagina principală
