@@ -809,7 +809,16 @@
       lastResult = { down: down.toFixed(1), up: up.toFixed(1), lat: ping, jitter };
     }
 
-    goBtn.addEventListener('click', runTest);
+    // Pe pagina unui rezultat distribuit, „Testează din nou” deschide pagina principală
+    // și îi transmite comanda de pornire automată. Pagina principală trebuie să recunoască
+    // parametrul autostart=1 (fragmentul de cod este furnizat separat).
+    if (hasSharedResult) {
+      goBtn.addEventListener('click', () => {
+        window.location.href = 'https://serv.ro/index.html?autostart=1';
+      });
+    } else {
+      goBtn.addEventListener('click', runTest);
+    }
     renderHistory();
   </script>
 
