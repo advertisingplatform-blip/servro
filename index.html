@@ -562,7 +562,7 @@
     /* ---------- share (imaginea de previzualizare e generată de Cloudflare Worker) ---------- */
     // Viteze rotunjite la întreg: Worker-ul desenează o singură dată fiecare combinație
     function shareParams({ down, up, lat, jitter }) {
-      return `dl=${Math.round(parseFloat(down))}&ul=${Math.round(parseFloat(up))}&ping=${Math.round(lat)}`;
+      return `dl=${Math.round(parseFloat(down))}&ul=${Math.round(parseFloat(up))}&ping=${Math.round(lat)}&jitter=${Math.round(parseFloat(jitter) || 0)}`;
     }
 
     shareBtn.addEventListener('click', async () => {
@@ -729,7 +729,11 @@
         });
         renderHistory();
 
-        lastResult = { down, up, lat };
+        const jitterValue = results.getUnloadedJitter
+          ? results.getUnloadedJitter()
+          : parseFloat(jitterVal.textContent);
+        jitterVal.textContent = Number.isFinite(jitterValue) ? Math.round(jitterValue) : '—';
+        lastResult = { down, up, lat, jitter: Number.isFinite(jitterValue) ? jitterValue : 0 };
         shareBtn.style.display = 'inline-flex';
       };
 
