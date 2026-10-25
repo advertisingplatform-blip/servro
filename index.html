@@ -746,6 +746,13 @@
 
     goBtn.addEventListener('click', runTest);
     renderHistory();
+
+    // Porneste automat testul la revenirea din pagina rezultatului
+    if (new URLSearchParams(window.location.search).get('autostart') === '1') {
+      setTimeout(() => {
+        runTest();
+      }, 500);
+    }
   </script>
 
   <script src="js/script.min.js" defer></script>
