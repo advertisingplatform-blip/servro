@@ -561,13 +561,13 @@
 
     /* ---------- share (imaginea de previzualizare e generată de Cloudflare Worker) ---------- */
     // Viteze rotunjite la întreg: Worker-ul desenează o singură dată fiecare combinație
-    function shareParams({ down, up, lat }) {
+    function shareParams({ down, up, lat, jitter }) {
       return `dl=${Math.round(parseFloat(down))}&ul=${Math.round(parseFloat(up))}&ping=${Math.round(lat)}`;
     }
 
     shareBtn.addEventListener('click', async () => {
       if (!lastResult) return;
-      const shareUrl = `${location.origin}/results/?${shareParams(lastResult)}`;
+      const shareUrl = `${location.origin}/results/index.html?${shareParams(lastResult)}`;
       const text = `Am obținut ${Math.round(parseFloat(lastResult.down))} Mbps descărcare / ${Math.round(parseFloat(lastResult.up))} Mbps încărcare la testul de pe serv.ro`;
       // pe telefon (și unde există) se deschide meniul de share al sistemului
       if (navigator.share) {
