@@ -45,12 +45,12 @@
 
   <style>:root{--primary-color:#14b0fe;}</style>
 
-  <!-- Stiluri vitezometru (folosesc paleta și fontul paginii) -->
+  <!-- Stiluri vitezometru -->
   <style>
     .speedtest-widget {
       --st-primary: var(--primary-color, #002bff);
-      --st-dl: var(--st-primary);   /* culoarea inelului de download */
-      --st-ul: #ff7a00;             /* culoarea inelului de upload */
+      --st-dl: var(--st-primary);
+      --st-ul: #ff7a00;
       --st-ink: #1a1d21;
       --st-muted: #7d8590;
       --st-track: #e7eaed;
@@ -70,7 +70,6 @@
 
     .speedtest-widget .test-hero { display: flex; gap: 32px; align-items: center; justify-content: center; flex-wrap: wrap; }
 
-    /* ---- vitezometru: două inele concentrice ---- */
     .speedtest-widget .gauge-col { position: relative; width: 290px; max-width: 100%; flex-shrink: 0; }
     .speedtest-widget .gauge-col svg { display: block; }
     .speedtest-widget .gauge-track { fill: none; stroke: var(--st-track); stroke-width: 16; stroke-linecap: round; }
@@ -91,7 +90,6 @@
     .speedtest-widget .ro-row.active .num { font-weight: 700; }
     .speedtest-widget .ro-unit { font-size: 12px; color: var(--st-muted); margin-top: 2px; }
 
-    /* ---- panouri download / upload / ping ---- */
     .speedtest-widget .metrics-col { display: flex; flex-direction: column; gap: 12px; flex: 1 1 300px; max-width: 390px; min-width: 260px; }
     .speedtest-widget .m-tile { display: flex; align-items: center; justify-content: space-between; gap: 14px; background: var(--st-surface); border-radius: 10px; padding: 12px 16px; }
     .speedtest-widget .m-tile.m-pj { justify-content: space-around; padding: 14px 16px; }
@@ -124,17 +122,6 @@
     .speedtest-widget .info-progress { position: relative; flex: 1; min-width: 120px; height: 4px; background: var(--st-track); border-radius: 2px; margin: 0 14px; }
     .speedtest-widget .info-progress i { display: block; height: 100%; width: 0%; background: var(--st-primary); border-radius: 2px; }
     .speedtest-widget .info-progress span { position: absolute; top: 50%; left: 0%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: #fff; border: 3px solid var(--st-primary); }
-
-    /* buton de share în stil pill, cu pictogramă (ca la YouTube); apare doar după test */
-    .speedtest-widget button#shareBtn {
-      display: none; align-items: center; gap: 8px;
-      font-family: "Inter Tight", sans-serif; font-weight: 700; font-size: 15px; color: var(--st-ink);
-      background: var(--st-surface); border: none; border-radius: 999px; padding: 13px 22px; cursor: pointer;
-      transition: background .15s ease, transform .15s ease;
-    }
-    .speedtest-widget button#shareBtn:hover { background: var(--st-track); transform: translateY(-1px); }
-    .speedtest-widget button#shareBtn:focus-visible { outline: 2px solid var(--st-primary); outline-offset: 3px; }
-    .speedtest-widget button#shareBtn svg { width: 20px; height: 20px; flex-shrink: 0; }
 
     .speedtest-widget .history { margin-top: 26px; border-top: 1px solid var(--st-border); padding-top: 12px; }
     .speedtest-widget .history h2 { font-size: 12px; font-weight: 700; color: var(--st-muted); text-transform: uppercase; letter-spacing: .03em; margin: 0 0 10px; }
@@ -250,7 +237,7 @@
                     <div class="ro-unit">Mbps</div>
                   </div>
                 </div>
-                
+
                 <div class="metrics-col">
                   <div class="m-tile">
                     <div class="m-info">
@@ -303,10 +290,6 @@
 
               <div class="actions">
                 <button id="go">Start</button>
-                <button id="shareBtn" type="button" aria-label="Distribuie rezultatul" title="Distribuie rezultatul">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M14 5l7 7-7 7v-4.2c-5.2 0-8.7 1.5-11 5.2 1-5.4 4.4-9.8 11-10.8V5z"/></svg>
-                  <span>Distribuie</span>
-                </button>
               </div>
 
               <div class="info-bar">
@@ -356,31 +339,24 @@
   <script type="module">
     import SpeedTest from "https://cdn.jsdelivr.net/npm/@cloudflare/speedtest@1.3.0/+esm";
 
-    const statusEl = document.getElementById('status');
-    const numDl = document.getElementById('numDl');
-    const numUl = document.getElementById('numUl');
-    const roDl = document.getElementById('roDl');
-    const roUl = document.getElementById('roUl');
-    const downVal = document.getElementById('downVal');
-    const upVal = document.getElementById('upVal');
-    const pingVal = document.getElementById('pingVal');
-    const jitterVal = document.getElementById('jitterVal');
-    const goBtn = document.getElementById('go');
-    const shareBtn = document.getElementById('shareBtn');
-    const historyBox = document.getElementById('historyBox');
-    const historyList = document.getElementById('historyList');
-    const ispLabel = document.getElementById('ispLabel');
-    const ipLabel = document.getElementById('ipLabel');
-    const progressBar = document.getElementById('progressBar');
-    const progressDot = document.getElementById('progressDot');
-    const downSpark = document.getElementById('downSpark');
-    const upSpark = document.getElementById('upSpark');
+    const $ = id => document.getElementById(id);
+    const statusEl = $('status');
+    const numDl = $('numDl'), numUl = $('numUl');
+    const roDl = $('roDl'), roUl = $('roUl');
+    const downVal = $('downVal'), upVal = $('upVal');
+    const pingVal = $('pingVal'), jitterVal = $('jitterVal');
+    const goBtn = $('go');
+    const historyBox = $('historyBox'), historyList = $('historyList');
+    const ispLabel = $('ispLabel'), ipLabel = $('ipLabel');
+    const progressBar = $('progressBar'), progressDot = $('progressDot');
+    const downSpark = $('downSpark'), upSpark = $('upSpark');
 
-    let lastResult = null;
+    const RESULTS_URL = `${location.origin}/results/index.html`;
+
     let netInfo = { isp: null, ip: null, type: null };
     let downSamples = [], upSamples = [];
 
-    /* ---------- network / ISP detection ---------- */
+    /* ---------- detectare rețea / ISP ---------- */
     function detectNetworkType() {
       const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
       if (conn && conn.type) netInfo.type = conn.type;
@@ -396,7 +372,6 @@
         showIsp(data && data.org, data && data.ip);
         if (netInfo.isp && netInfo.ip) return;
       } catch (e) { console.warn('[servro] ISP lookup failed:', e); }
-      // rezervă: alt serviciu, dacă primul a eșuat sau nu a returnat tot
       try {
         const res = await fetch('https://api.ipapi.is/');
         const data = await res.json();
@@ -421,11 +396,11 @@
     const ICON_CELL = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="14" width="3" height="6"/><rect x="8.5" y="10" width="3" height="10"/><rect x="14" y="6" width="3" height="14"/><rect x="19.5" y="2" width="3" height="18"/></svg>';
     function networkIcon(type) {
       if (type === 'cellular') return ICON_CELL;
-      if (type === 'wifi' || type === 'ethernet' || type === 'other' || type === 'wimax') return ICON_WIFI;
+      if (['wifi', 'ethernet', 'other', 'wimax'].includes(type)) return ICON_WIFI;
       return '';
     }
 
-    /* ---------- history (localStorage) ---------- */
+    /* ---------- istoric (localStorage) ---------- */
     function loadHistory() {
       try { const raw = localStorage.getItem('servro_speedtest_history'); return raw ? JSON.parse(raw) : []; }
       catch { return []; }
@@ -456,14 +431,13 @@
     /* ---------- vitezometru: două inele concentrice (download = exterior, upload = interior) ---------- */
     const CX = 150, CY = 150, R_LABEL = 142;
     const START_DEG = 225, SWEEP = 270;
-    // Scala din designul de referință: poziții egale pe cadran, interpolare liniară între ele
     const TICKS = [0, 0.5, 1, 10, 100, 500, 1000];
     const TICK_LABELS = ['0', '0.5', '1', '10', '100', '500', '1000+'];
     const REDUCE_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const rings = {
-      dl: { r: 118, cur: 0, target: 0, track: document.getElementById('trackDl'), prog: document.getElementById('progDl'), dot: document.getElementById('dotDl') },
-      ul: { r: 92,  cur: 0, target: 0, track: document.getElementById('trackUl'), prog: document.getElementById('progUl'), dot: document.getElementById('dotUl') }
+      dl: { r: 118, cur: 0, target: 0, track: $('trackDl'), prog: $('progDl'), dot: $('dotDl') },
+      ul: { r: 92,  cur: 0, target: 0, track: $('trackUl'), prog: $('progUl'), dot: $('dotUl') }
     };
 
     function polar(deg, r) {
@@ -475,7 +449,6 @@
       const large = Math.abs(d1 - d2) > 180 ? 1 : 0;
       return `M${p0.x.toFixed(1)},${p0.y.toFixed(1)} A${r},${r} 0 ${large} 1 ${p1.x.toFixed(1)},${p1.y.toFixed(1)}`;
     }
-    // viteză (Mbps) -> poziție pe cadran, 0..1
     function fractionFor(v) {
       if (!(v > 0)) return 0;
       const last = TICKS.length - 1;
@@ -486,7 +459,7 @@
       return 1;
     }
     function renderTicks() {
-      const g = document.getElementById('gaugeTicks');
+      const g = $('gaugeTicks');
       g.innerHTML = '';
       const step = SWEEP / (TICKS.length - 1);
       TICK_LABELS.forEach((label, i) => {
@@ -508,7 +481,6 @@
       g.dot.setAttribute('cy', p.y.toFixed(1));
     }
 
-    // animație lină: punctul alunecă spre valoarea țintă
     let raf = null;
     function animate() {
       let moving = false;
@@ -539,7 +511,7 @@
     }
     renderTicks();
 
-    /* ---------- grafice download / upload (arie netezită) ---------- */
+    /* ---------- grafice download / upload ---------- */
     const SPARK_W = 110, SPARK_H = 50;
     function sparkPath(samples, w, h) {
       if (!samples.length) return '';
@@ -553,35 +525,12 @@
         const cx = ((x0 + x1) / 2).toFixed(1);
         d += ` C${cx},${y0.toFixed(1)} ${cx},${y1.toFixed(1)} ${x1.toFixed(1)},${y1.toFixed(1)}`;
       }
-      d += ` L${w},${h} Z`;
-      return d;
+      return d + ` L${w},${h} Z`;
     }
 
     function mbps(bps) { return bps ? (bps / 1e6).toFixed(1) : '0.0'; }
 
-    /* ---------- share (imaginea de previzualizare e generată de Cloudflare Worker) ---------- */
-    // Viteze rotunjite la întreg: Worker-ul desenează o singură dată fiecare combinație
-    function shareParams({ down, up, lat, jitter }) {
-      return `dl=${Math.round(parseFloat(down))}&ul=${Math.round(parseFloat(up))}&ping=${Math.round(lat)}&jitter=${Math.round(parseFloat(jitter) || 0)}`;
-    }
-
-    shareBtn.addEventListener('click', async () => {
-      if (!lastResult) return;
-      const shareUrl = `${location.origin}/results/index.html?${shareParams(lastResult)}`;
-      const text = `Am obținut ${Math.round(parseFloat(lastResult.down))} Mbps descărcare / ${Math.round(parseFloat(lastResult.up))} Mbps încărcare la testul de pe serv.ro`;
-      // pe telefon (și unde există) se deschide meniul de share al sistemului
-      if (navigator.share) {
-        try { await navigator.share({ title: 'Test viteză serv.ro', text, url: shareUrl }); } catch (e) { /* anulat de utilizator */ }
-        return;
-      }
-      // altfel: Facebook (citește imaginea de previzualizare de la link)
-      window.open(
-        `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
-        '_blank', 'noopener,width=600,height=520'
-      );
-    });
-
-    /* ---------- test run ---------- */
+    /* ---------- lista de măsurători ---------- */
     const measurements = [
       { type: 'latency', numPackets: 1 },
       { type: 'download', bytes: 1e5, count: 1, bypassMinDuration: true },
@@ -598,23 +547,22 @@
       { type: 'upload', bytes: 5e7, count: 3 },
       { type: 'download', bytes: 2.5e8, count: 2 }
     ];
-    /* ---------- bara de progres cu punct (stânga = start test, dreapta = final) ---------- */
-    /* PROGRESS-MODEL-START */
-    // Progresul urmează ceasul: durata totală se estimează din lista de măsurători și din viteza măsurată
-    // (nu depinde de câte evenimente declanșează biblioteca). Estimarea se corectează pe parcurs, iar punctul
-    // nu merge niciodată înapoi și nu se oprește complet nici dacă testul durează mai mult decât s-a estimat.
+
+    /* ---------- bara de progres cu punct ---------- */
+    // Progresul urmează ceasul: durata totală se estimează din lista de măsurători și din viteza măsurată.
+    // Estimarea se corectează pe parcurs, iar punctul nu merge niciodată înapoi.
     const C0 = 0.12, C_LAT = 0.04, STARTUP = 0.4, DEFAULT_SPEED = 300e6, TRUST_AFTER_S = 3;
     function predictDuration(measurements, speeds) {
       let t = STARTUP;
       const done = { download: false, upload: false };
       for (const m of measurements) {
         if (m.type === 'latency') { t += m.numPackets * C_LAT; continue; }
-        if (done[m.type]) continue;                       // biblioteca sare peste măsurătorile mai mari
+        if (done[m.type]) continue;
         const other = m.type === 'download' ? 'upload' : 'download';
         const S = Math.max(speeds[m.type] || speeds[other] || DEFAULT_SPEED, 1e6);
         const net = m.bytes * 8 / S;
         t += m.count * (C0 + net);
-        if (net >= 1) done[m.type] = true;                // cereri de peste ~1s: ultima măsurătoare din acest sens
+        if (net >= 1) done[m.type] = true;
       }
       return t;
     }
@@ -625,14 +573,13 @@
       return {
         start(now) { t0 = now; speeds.download = 0; speeds.upload = 0; total = predictDuration(measurements, speeds); },
         speed(type, bps, now) {
-          if (!(bps > 0) || (now - t0) / 1000 < TRUST_AFTER_S) return;   // la început citirile sunt prea mici
-          speeds[type] = Math.max(speeds[type], bps);                    // citirile timpurii subestimează: doar creștem
+          if (!(bps > 0) || (now - t0) / 1000 < TRUST_AFTER_S) return;
+          speeds[type] = Math.max(speeds[type], bps);
           total = 0.5 * total + 0.5 * predictDuration(measurements, speeds);
         },
         value(now) { return Math.min(0.97, map((now - t0) / 1000 / total)); }
       };
     }
-    /* PROGRESS-MODEL-END */
 
     const progressModel = createProgressModel(measurements);
     let prog = 0, progRaf = null, progFinishing = false;
@@ -663,6 +610,7 @@
       progFinishing = false; prog = 0; drawProgress();
     }
 
+    /* ---------- rulare test ---------- */
     function runTest() {
       goBtn.disabled = true; goBtn.textContent = 'Se testează…';
       resetGauge();
@@ -673,7 +621,6 @@
       downVal.textContent = '—'; upVal.textContent = '—'; pingVal.textContent = '—'; jitterVal.textContent = '—';
       numDl.textContent = '—'; numUl.textContent = '—';
       startProgress();
-      shareBtn.style.display = 'none';
 
       const test = new SpeedTest({ autoStart: false, measurements });
 
@@ -711,30 +658,29 @@
       };
 
       test.onFinish = (results) => {
-        const down = mbps(results.getDownloadBandwidth());
-        const up = mbps(results.getUploadBandwidth());
-        const lat = Math.round(results.getUnloadedLatency() || 0);
-        downVal.textContent = down; upVal.textContent = up; pingVal.textContent = lat;
-        numDl.textContent = down; numUl.textContent = up;
-        setRing('dl', parseFloat(down)); setRing('ul', parseFloat(up));
-        setActive(null);
-        statusEl.textContent = 'Test finalizat';
-        goBtn.disabled = false; goBtn.textContent = 'Testează din nou';
-        finishProgress();
+        const dlBps = results.getDownloadBandwidth() || 0;
+        const ulBps = results.getUploadBandwidth() || 0;
+        const ping = Math.round(results.getUnloadedLatency() || 0);
+        const jitter = Math.round((results.getUnloadedJitter ? results.getUnloadedJitter() : 0) || 0);
 
+        // istoric (valori cu o zecimală)
+        const now = new Date();
         saveHistory({
-          date: new Date().toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit' }) + ' ' +
-                new Date().toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' }),
-          down, up, isp: netInfo.isp, netType: netInfo.type
+          date: now.toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit' }) + ' ' +
+                now.toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' }),
+          down: mbps(dlBps), up: mbps(ulBps), isp: netInfo.isp, netType: netInfo.type
         });
-        renderHistory();
 
-        const jitterValue = results.getUnloadedJitter
-          ? results.getUnloadedJitter()
-          : parseFloat(jitterVal.textContent);
-        jitterVal.textContent = Number.isFinite(jitterValue) ? Math.round(jitterValue) : '—';
-        lastResult = { down, up, lat, jitter: Number.isFinite(jitterValue) ? jitterValue : 0 };
-        shareBtn.style.display = 'inline-flex';
+        // redirecționare către pagina de rezultate (valori întregi)
+        const params = new URLSearchParams({
+          dl: Math.round(dlBps / 1e6),
+          ul: Math.round(ulBps / 1e6),
+          ping,
+          jitter
+        });
+        statusEl.textContent = 'Test finalizat';
+        finishProgress();
+        setTimeout(() => { window.location.href = `${RESULTS_URL}?${params}`; }, 400);
       };
 
       test.onError = () => {
@@ -751,11 +697,9 @@
     goBtn.addEventListener('click', runTest);
     renderHistory();
 
-    // Porneste automat testul la revenirea din pagina rezultatului
+    // Pornește automat testul la revenirea din pagina de rezultate (?autostart=1)
     if (new URLSearchParams(window.location.search).get('autostart') === '1') {
-      setTimeout(() => {
-        runTest();
-      }, 500);
+      setTimeout(runTest, 500);
     }
   </script>
 
