@@ -7,8 +7,12 @@
   <meta name="description" content="Test viteză internet gratuit, fără instalare: măsoară download, upload și ping pe mobil sau pe fix și află cum interpretezi rezultatele.">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
   <link rel="canonical" href="https://serv.ro/">
+
+  <!-- Favicons -->
   <link rel="icon" href="img/favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="img/favicon.png">
+
+  <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Test viteză internet – măsoară download, upload și ping | Serv.ro">
   <meta property="og:description" content="Test viteză internet gratuit, fără instalare: măsoară download, upload și ping pe mobil sau pe fix și află cum interpretezi rezultatele.">
@@ -16,103 +20,266 @@
   <meta property="og:image" content="https://serv.ro/img/og-image.png">
   <meta property="og:site_name" content="Serv.ro">
   <meta property="og:locale" content="ro_RO">
+
+  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Test viteză internet – măsoară download, upload și ping | Serv.ro">
   <meta name="twitter:description" content="Test viteză internet gratuit, fără instalare: măsoară download, upload și ping pe mobil sau pe fix și află cum interpretezi rezultatele.">
   <meta name="twitter:image" content="https://serv.ro/img/og-image.png">
+
+  <!-- Preconnect / preload -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com">
+  <link rel="preconnect" href="https://openspeedtest.com">
+  <link rel="preload" href="css/style.min.css" as="style">
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&amp;display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&amp;display=swap"></noscript>
   <link rel="stylesheet" href="css/style.min.css">
-  <link rel="stylesheet" href="css/seo.css">
+
   <style>:root{--primary-color:#14b0fe;}</style>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://serv.ro/#website", "url": "https://serv.ro/", "name": "Serv.ro", "inLanguage": "ro-RO"}, {"@type": "WebApplication", "name": "Test viteză internet – Serv.ro", "url": "https://serv.ro/", "description": "Test viteză internet gratuit, fără instalare: măsoară download, upload și ping pe mobil sau pe fix și află cum interpretezi rezultatele.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "inLanguage": "ro-RO", "isPartOf": {"@id": "https://serv.ro/#website"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "RON"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Cât de exact este testul de viteză?", "acceptedAnswer": {"@type": "Answer", "text": "Testul arată viteza reală între dispozitivul tău și serverul de test, în acel moment. Rezultatul poate diferi de viteza din abonament din cauza Wi-Fi-ului, a dispozitivului, a distanței până la server și a traficului din rețea. Pentru o imagine corectă, repetă testul de 2–3 ori."}}, {"@type": "Question", "name": "Ce înseamnă Mbps?", "acceptedAnswer": {"@type": "Answer", "text": "Mbps înseamnă megabiți pe secundă. Un megabyte (MB) are 8 megabiți, deci o conexiune de 100 Mbps descarcă teoretic aproximativ 12,5 MB pe secundă."}}, {"@type": "Question", "name": "De ce am viteză mai mică pe Wi-Fi decât pe cablu?", "acceptedAnswer": {"@type": "Answer", "text": "Wi-Fi-ul pierde din viteză din cauza distanței față de router, a pereților, a interferențelor de la alte rețele și a standardului folosit. Cablul Ethernet oferă de obicei viteza cea mai apropiată de cea din abonament."}}, {"@type": "Question", "name": "Testul de viteză consumă date mobile?", "acceptedAnswer": {"@type": "Answer", "text": "Da. Un test poate transfera de la câțiva zeci până la sute de MB, în funcție de viteza conexiunii. Dacă ai trafic limitat, rulează-l pe Wi-Fi sau cu moderație."}}, {"@type": "Question", "name": "Ce ping este bun?", "acceptedAnswer": {"@type": "Answer", "text": "Sub 30 ms este foarte bun, 30–60 ms este bun pentru uz general și gaming, iar peste 100 ms se simte în jocuri și apeluri video."}}]}]}</script>
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://serv.ro/#website", "url": "https://serv.ro/", "name": "Serv.ro", "inLanguage": "ro-RO"}, {"@type": "WebApplication", "name": "Test viteză internet – Serv.ro", "url": "https://serv.ro/", "description": "Test viteză internet gratuit, fără instalare: măsoară download, upload și ping pe mobil sau pe fix și află cum interpretezi rezultatele.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "inLanguage": "ro-RO", "isPartOf": {"@id": "https://serv.ro/#website"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "RON"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Cât de exact este testul de viteză?", "acceptedAnswer": {"@type": "Answer", "text": "Testul arată viteza reală între dispozitivul tău și serverul de test, în acel moment. Rezultatul poate diferi de viteza din abonament din cauza Wi-Fi-ului, a dispozitivului, a distanței până la server și a traficului din rețea. Pentru o imagine corectă, repetă testul de 2–3 ori."}}, {"@type": "Question", "name": "Ce înseamnă Mbps?", "acceptedAnswer": {"@type": "Answer", "text": "Mbps înseamnă megabiți pe secundă. Un megabyte (MB) are 8 megabiți, deci o conexiune de 100 Mbps descarcă teoretic aproximativ 12,5 MB pe secundă."}}, {"@type": "Question", "name": "De ce am viteză mai mică pe Wi-Fi decât pe cablu?", "acceptedAnswer": {"@type": "Answer", "text": "Wi-Fi-ul pierde din viteză din cauza distanței față de router, a pereților, a interferențelor de la alte rețele și a standardului folosit. Cablul Ethernet oferă de obicei viteza cea mai apropiată de cea din abonament."}}, {"@type": "Question", "name": "Testul de viteză consumă date mobile?", "acceptedAnswer": {"@type": "Answer", "text": "Da. Un test poate transfera de la câțiva zeci până la sute de MB, în funcție de viteza conexiunii. Dacă ai trafic limitat, rulează-l pe Wi-Fi sau cu moderație."}}, {"@type": "Question", "name": "Ce ping este bun?", "acceptedAnswer": {"@type": "Answer", "text": "Sub 30 ms este foarte bun, 30–60 ms este bun pentru uz general și gaming, iar peste 100 ms se simte în jocuri și apeluri video."}}]}]}
+  </script>
+
+  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-LJBSKSB4RL"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LJBSKSB4RL');</script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-LJBSKSB4RL');
+  </script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2912050515016663" crossorigin="anonymous"></script>
 </head>
 <body>
+
   <section class="menu menu5 cid-tTTHxBbiog" id="menu-5-tTTHxBbiog">
     <nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
       <div class="container">
         <div class="navbar-brand">
-          <span class="navbar-logo"><a href="index.html"><img src="img/favicon.png" alt="Serv.ro" width="69" height="69" style="height:4.3rem;width:auto"></a></span>
-          <span class="navbar-caption-wrap"><a class="navbar-caption text-black display-4" href="index.html">Test viteză internet</a></span>
+          <span class="navbar-logo">
+            <a href="index.html">
+              <img src="img/favicon.png" alt="Serv.ro" style="height: 4.3rem;">
+            </a>
+          </span>
+          <span class="navbar-caption-wrap">
+            <a class="navbar-caption text-black display-4" href="index.html">Test viteză internet</a>
+          </span>
         </div>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Comută navigarea"><div class="hamburger"><span></span><span></span><span></span><span></span></div></button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Comută navigarea">
+          <div class="hamburger"><span></span><span></span><span></span><span></span></div>
+        </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav nav-dropdown"><li class="nav-item"><a class="nav-link link text-black display-4" href="p/rcs-rds.html">Digi</a></li><li class="nav-item"><a class="nav-link link text-black display-4" href="p/orange.html">Orange</a></li><li class="nav-item"><a class="nav-link link text-black display-4" href="p/telekom.html">Telekom</a></li><li class="nav-item"><a class="nav-link link text-black display-4" href="p/vodafone.html">Vodafone</a></li></ul>
-          <div class="navbar-buttons mbr-section-btn"><a class="btn btn-primary display-4" href="index.html">Mobil</a></div>
+        <ul class="navbar-nav nav-dropdown">
+          <li class="nav-item"><a class="nav-link link text-black display-4" href="p/rcs-rds.html">Digi</a></li>
+          <li class="nav-item"><a class="nav-link link text-black display-4" href="p/orange.html">Orange</a></li>
+          <li class="nav-item"><a class="nav-link link text-black display-4" href="p/telekom.html">Telekom</a></li>
+          <li class="nav-item"><a class="nav-link link text-black display-4" href="p/vodafone.html">Vodafone</a></li>
+        </ul>
+          <div class="navbar-buttons mbr-section-btn">
+            <a class="btn btn-primary display-4" href="index.html">Mobil</a>
+          </div>
         </div>
       </div>
     </nav>
   </section>
-  <header class="hero">
-    <div class="container">
-      
-      <h1>Test viteză internet</h1>
-      <p class="lead">Măsoară în câteva secunde viteza de download și upload, ping-ul și stabilitatea conexiunii tale, pe telefon sau pe calculator. Gratuit, fără instalare.</p>
-      <div class="test-frame" style="--h:418px"><iframe src="//openspeedtest.com/speedtest" title="Test viteză internet" loading="lazy" allow="geolocation"></iframe></div>
-      <p class="test-note">Pentru un rezultat corect: închide aplicațiile care folosesc internetul și, dacă poți, conectează-te prin cablu. Testul rulează într-un cadru furnizat de openspeedtest.com.</p>
+
+  <section class="header18 cid-tTTHxBbY3S mbr-fullscreen">
+    <div class="mbr-overlay" style="opacity: 0.3; background-color: rgb(255, 250, 250);"></div>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="content-wrap col-12 col-md-10">
+          <h1 class="mbr-section-title mbr-fonts-style mbr-white mb-4 display-1" style="color:#14b0fe;">
+            <strong>Test viteză internet mobil</strong>
+          </h1>
+          <div class="mbr-fonts-style mbr-text mbr-white mb-4 display-7">
+            <iframe src="//openspeedtest.com/speedtest" width="735" height="418" frameborder="0" scrolling="no" loading="lazy" title="Test viteză internet"></iframe>
+          </div>
+        </div>
+      </div>
     </div>
-  </header>
-  <main class="content"><div class="wrap">
-    <h2>Cum interpretezi rezultatele testului</h2>
-    <h3>Download</h3>
-    <p>Viteza de descărcare arată cât de repede primești date: pagini web, filme, jocuri, actualizări. Este cifra pe care o promit cele mai multe abonamente și se măsoară în Mbps.</p>
-    <h3>Upload</h3>
-    <p>Viteza de încărcare contează când trimiți date: apeluri video, fișiere în cloud, transmisii live, backup-uri. La multe conexiuni este mai mică decât download-ul.</p>
-    <h3>Ping (latență)</h3>
-    <p>Ping-ul este timpul de răspuns, în milisecunde (ms). Cu cât este mai mic, cu atât jocurile online și apelurile video merg mai fluent. Sub 30 ms este foarte bun.</p>
-    <h3>Jitter</h3>
-    <p>Jitter-ul măsoară cât variază ping-ul de la o cerere la alta. Un jitter mare provoacă sacadări în apeluri și jocuri, chiar dacă viteza pare bună.</p>
+  </section>
 
-    <h2>Ce viteză de internet îți trebuie?</h2>
-    <div class="table-wrap"><table>
-<thead><tr><th>Ce faci online</th><th>Download recomandat</th><th>Upload recomandat</th></tr></thead>
-<tbody>
-<tr><td>Navigare și e-mail</td><td>5–10 Mbps</td><td>1–3 Mbps</td></tr>
-<tr><td>Streaming HD</td><td>5–10 Mbps / flux</td><td>–</td></tr>
-<tr><td>Streaming 4K</td><td>15–25 Mbps / flux</td><td>–</td></tr>
-<tr><td>Videoconferințe (Zoom, Meet, Teams)</td><td>5–10 Mbps</td><td>3–5 Mbps</td></tr>
-<tr><td>Gaming online</td><td>10–25 Mbps</td><td>3–5 Mbps, ping sub 50 ms</td></tr>
-<tr><td>Casă cu mai multe dispozitive</td><td>100 Mbps sau mai mult</td><td>10+ Mbps</td></tr>
-</tbody></table></div>
-<p>Valorile sunt orientative și se adună: dacă în casă se văd două filme 4K și are loc și un apel video, ai nevoie de suma lor, plus o rezervă.</p>
+  <section class="features4 cid-tTTHxBhMnL pb-0" id="ghid">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+          <p class="mbr-text mbr-fonts-style mb-3 display-7">Măsoară în câteva secunde viteza de download și upload, ping-ul și stabilitatea conexiunii tale, pe telefon sau pe calculator. Gratuit, fără instalare. Pentru un rezultat corect, închide aplicațiile care folosesc internetul și, dacă poți, conectează-te prin cablu.</p>
+          <h2 class="mbr-section-title mbr-fonts-style mt-5 mb-4 display-2"><strong>Cum interpretezi rezultatele testului</strong></h2>
+        </div>
+      </div>
+      <div class="row">
+          <div class="item features-image col-12 col-md-6 col-lg-3">
+            <div class="item-wrapper">
+              <div class="item-content">
+                <h3 class="item-title mbr-fonts-style display-5"><strong>Download</strong></h3>
+                <p class="mbr-text mbr-fonts-style display-7">Cât de repede primești date: pagini, filme, jocuri, actualizări. Este cifra promisă de majoritatea abonamentelor, în Mbps.</p>
+              </div>
+            </div>
+          </div>
+          <div class="item features-image col-12 col-md-6 col-lg-3">
+            <div class="item-wrapper">
+              <div class="item-content">
+                <h3 class="item-title mbr-fonts-style display-5"><strong>Upload</strong></h3>
+                <p class="mbr-text mbr-fonts-style display-7">Cât de repede trimiți date: apeluri video, fișiere în cloud, transmisii live, backup-uri. De obicei e mai mic decât download-ul.</p>
+              </div>
+            </div>
+          </div>
+          <div class="item features-image col-12 col-md-6 col-lg-3">
+            <div class="item-wrapper">
+              <div class="item-content">
+                <h3 class="item-title mbr-fonts-style display-5"><strong>Ping</strong></h3>
+                <p class="mbr-text mbr-fonts-style display-7">Timpul de răspuns al rețelei, în milisecunde. Sub 30 ms este foarte bun pentru jocuri online și apeluri video.</p>
+              </div>
+            </div>
+          </div>
+          <div class="item features-image col-12 col-md-6 col-lg-3">
+            <div class="item-wrapper">
+              <div class="item-content">
+                <h3 class="item-title mbr-fonts-style display-5"><strong>Jitter</strong></h3>
+                <p class="mbr-text mbr-fonts-style display-7">Cât variază ping-ul de la o cerere la alta. Un jitter mare provoacă sacadări chiar dacă viteza pare bună.</p>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+          <h2 class="mbr-section-title mbr-fonts-style mt-5 mb-4 display-2"><strong>Ce viteză de internet îți trebuie?</strong></h2>
+          <div class="table-responsive"><table class="table table-striped mbr-fonts-style display-7"><thead><tr><th>Ce faci online</th><th>Download recomandat</th><th>Upload recomandat</th></tr></thead><tbody><tr><td>Navigare și e-mail</td><td>5–10 Mbps</td><td>1–3 Mbps</td></tr><tr><td>Streaming HD</td><td>5–10 Mbps / flux</td><td>–</td></tr><tr><td>Streaming 4K</td><td>15–25 Mbps / flux</td><td>–</td></tr><tr><td>Videoconferințe (Zoom, Meet, Teams)</td><td>5–10 Mbps</td><td>3–5 Mbps</td></tr><tr><td>Gaming online</td><td>10–25 Mbps</td><td>3–5 Mbps, ping sub 50 ms</td></tr><tr><td>Casă cu mai multe dispozitive</td><td>100 Mbps sau mai mult</td><td>10+ Mbps</td></tr></tbody></table></div>
+          <p class="mbr-text mbr-fonts-style mb-3 display-7">Valorile sunt orientative și se adună: dacă în casă se văd două filme 4K și are loc și un apel video, ai nevoie de suma lor, plus o rezervă.</p>
+          <h2 class="mbr-section-title mbr-fonts-style mt-5 mb-4 display-2"><strong>De ce primești rezultate diferite</strong></h2>
+          <ul class="mbr-text mbr-fonts-style display-7">
+            <li><strong>Wi-Fi sau cablu:</strong> Wi-Fi-ul scade viteza cu distanța și cu pereții.</li>
+            <li><strong>Ora din zi:</strong> seara, când rețeaua e aglomerată, viteza poate scădea, mai ales pe mobil.</li>
+            <li><strong>Serverul de test:</strong> un server mai îndepărtat sau mai încărcat dă un rezultat mai slab.</li>
+            <li><strong>Dispozitivul:</strong> un telefon, un laptop sau un router vechi pot limita viteza.</li>
+            <li><strong>Alte aplicații:</strong> descărcările și streamingul din fundal consumă din bandă.</li>
+          </ul>
+          <h2 class="mbr-section-title mbr-fonts-style mt-5 mb-4 display-2"><strong>Cum îți îmbunătățești conexiunea</strong></h2>
+          <ol class="mbr-text mbr-fonts-style display-7">
+            <li>Repornește routerul și modemul, apoi repetă testul.</li>
+            <li>Mută routerul într-un loc central și ridicat, departe de aparate care produc interferențe.</li>
+            <li>Folosește banda Wi-Fi de 5 GHz pentru viteză și 2,4 GHz pentru rază mai mare.</li>
+            <li>Conectează prin cablu dispozitivele care contează (PC, consolă, TV).</li>
+            <li>Actualizează firmware-ul routerului și driverele plăcii de rețea.</li>
+            <li>Dacă rezultatele rămân sub abonament, contactează operatorul cu capturi de la mai multe teste.</li>
+          </ol>
+          <h2 class="mbr-section-title mbr-fonts-style mt-5 mb-4 display-2"><strong>Testează viteza pe rețeaua operatorului tău</strong></h2>
+          <p class="mbr-text mbr-fonts-style mb-3 display-7">Fiecare operator are o pagină cu un test dedicat și sfaturi specifice.</p>
+        </div>
+      </div>
+      <div class="row">
+          <div class="item features-image col-12 col-md-6 col-lg-3">
+            <div class="item-wrapper">
+              <div class="item-content">
+                <h3 class="item-title mbr-fonts-style display-5"><strong><a class="text-black fw-bold" href="p/rcs-rds.html">Test Digi</a></strong></h3>
+                <p class="mbr-text mbr-fonts-style display-7">Testează conexiunea Digi, fixă sau mobilă, pe un server din propria rețea.</p>
+                <div class="mbr-section-btn item-footer"><a href="p/rcs-rds.html" class="btn item-btn btn-primary display-7">Testează</a></div>
+              </div>
+            </div>
+          </div>
+          <div class="item features-image col-12 col-md-6 col-lg-3">
+            <div class="item-wrapper">
+              <div class="item-content">
+                <h3 class="item-title mbr-fonts-style display-5"><strong><a class="text-black fw-bold" href="p/orange.html">Test Orange</a></strong></h3>
+                <p class="mbr-text mbr-fonts-style display-7">Măsoară viteza abonamentului Orange: download, upload și ping.</p>
+                <div class="mbr-section-btn item-footer"><a href="p/orange.html" class="btn item-btn btn-primary display-7">Testează</a></div>
+              </div>
+            </div>
+          </div>
+          <div class="item features-image col-12 col-md-6 col-lg-3">
+            <div class="item-wrapper">
+              <div class="item-content">
+                <h3 class="item-title mbr-fonts-style display-5"><strong><a class="text-black fw-bold" href="p/telekom.html">Test Telekom</a></strong></h3>
+                <p class="mbr-text mbr-fonts-style display-7">Verifică dacă abonamentul Telekom oferă viteza promisă.</p>
+                <div class="mbr-section-btn item-footer"><a href="p/telekom.html" class="btn item-btn btn-primary display-7">Testează</a></div>
+              </div>
+            </div>
+          </div>
+          <div class="item features-image col-12 col-md-6 col-lg-3">
+            <div class="item-wrapper">
+              <div class="item-content">
+                <h3 class="item-title mbr-fonts-style display-5"><strong><a class="text-black fw-bold" href="p/vodafone.html">Test Vodafone</a></strong></h3>
+                <p class="mbr-text mbr-fonts-style display-7">Testează descărcarea pe conexiunea Vodafone, prin Fast.com.</p>
+                <div class="mbr-section-btn item-footer"><a href="p/vodafone.html" class="btn item-btn btn-primary display-7">Testează</a></div>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+          <h2 class="mbr-section-title mbr-fonts-style mt-5 mb-4 display-2"><strong>Întrebări frecvente</strong></h2>
+          <div class="accordion" id="faq">
+            <div class="accordion-item">
+              <h3 class="accordion-header" id="faq-h1"><button class="accordion-button collapsed mbr-fonts-style display-7" type="button" data-bs-toggle="collapse" data-bs-target="#faq-c1" aria-expanded="false" aria-controls="faq-c1">Cât de exact este testul de viteză?</button></h3>
+              <div id="faq-c1" class="accordion-collapse collapse" aria-labelledby="faq-h1" data-bs-parent="#faq">
+                <div class="accordion-body mbr-fonts-style display-7">Testul arată viteza reală între dispozitivul tău și serverul de test, în acel moment. Rezultatul poate diferi de viteza din abonament din cauza Wi-Fi-ului, a dispozitivului, a distanței până la server și a traficului din rețea. Pentru o imagine corectă, repetă testul de 2–3 ori.</div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h3 class="accordion-header" id="faq-h2"><button class="accordion-button collapsed mbr-fonts-style display-7" type="button" data-bs-toggle="collapse" data-bs-target="#faq-c2" aria-expanded="false" aria-controls="faq-c2">Ce înseamnă Mbps?</button></h3>
+              <div id="faq-c2" class="accordion-collapse collapse" aria-labelledby="faq-h2" data-bs-parent="#faq">
+                <div class="accordion-body mbr-fonts-style display-7">Mbps înseamnă megabiți pe secundă. Un megabyte (MB) are 8 megabiți, deci o conexiune de 100 Mbps descarcă teoretic aproximativ 12,5 MB pe secundă.</div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h3 class="accordion-header" id="faq-h3"><button class="accordion-button collapsed mbr-fonts-style display-7" type="button" data-bs-toggle="collapse" data-bs-target="#faq-c3" aria-expanded="false" aria-controls="faq-c3">De ce am viteză mai mică pe Wi-Fi decât pe cablu?</button></h3>
+              <div id="faq-c3" class="accordion-collapse collapse" aria-labelledby="faq-h3" data-bs-parent="#faq">
+                <div class="accordion-body mbr-fonts-style display-7">Wi-Fi-ul pierde din viteză din cauza distanței față de router, a pereților, a interferențelor de la alte rețele și a standardului folosit. Cablul Ethernet oferă de obicei viteza cea mai apropiată de cea din abonament.</div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h3 class="accordion-header" id="faq-h4"><button class="accordion-button collapsed mbr-fonts-style display-7" type="button" data-bs-toggle="collapse" data-bs-target="#faq-c4" aria-expanded="false" aria-controls="faq-c4">Testul de viteză consumă date mobile?</button></h3>
+              <div id="faq-c4" class="accordion-collapse collapse" aria-labelledby="faq-h4" data-bs-parent="#faq">
+                <div class="accordion-body mbr-fonts-style display-7">Da. Un test poate transfera de la câțiva zeci până la sute de MB, în funcție de viteza conexiunii. Dacă ai trafic limitat, rulează-l pe Wi-Fi sau cu moderație.</div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h3 class="accordion-header" id="faq-h5"><button class="accordion-button collapsed mbr-fonts-style display-7" type="button" data-bs-toggle="collapse" data-bs-target="#faq-c5" aria-expanded="false" aria-controls="faq-c5">Ce ping este bun?</button></h3>
+              <div id="faq-c5" class="accordion-collapse collapse" aria-labelledby="faq-h5" data-bs-parent="#faq">
+                <div class="accordion-body mbr-fonts-style display-7">Sub 30 ms este foarte bun, 30–60 ms este bun pentru uz general și gaming, iar peste 100 ms se simte în jocuri și apeluri video.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <h2>De ce primești rezultate diferite</h2>
-    <ul>
-      <li><strong>Wi-Fi sau cablu:</strong> Wi-Fi-ul scade viteza cu distanța și cu pereții.</li>
-      <li><strong>Ora din zi:</strong> seara, când rețeaua e aglomerată, viteza poate scădea, mai ales pe mobil.</li>
-      <li><strong>Serverul de test:</strong> un server mai îndepărtat sau mai încărcat dă un rezultat mai slab.</li>
-      <li><strong>Dispozitivul:</strong> un telefon sau un laptop vechi, ori un router depășit, pot limita viteza.</li>
-      <li><strong>Alte aplicații:</strong> descărcările și streamingul din fundal consumă din bandă.</li>
-    </ul>
-
-    <h2>Cum îți îmbunătățești conexiunea</h2>
-    <ol>
-      <li>Repornește routerul și modemul, apoi repetă testul.</li>
-      <li>Mută routerul într-un loc central și ridicat, departe de aparate care produc interferențe.</li>
-      <li>Folosește banda Wi-Fi de 5 GHz pentru viteză și 2,4 GHz pentru rază mai mare.</li>
-      <li>Conectează prin cablu dispozitivele care contează (PC, consolă, TV).</li>
-      <li>Actualizează firmware-ul routerului și driverele plăcii de rețea.</li>
-      <li>Dacă rezultatele rămân sub abonament, contactează operatorul cu capturi de la mai multe teste.</li>
-    </ol>
-
-    <h2>Testează viteza pe rețeaua operatorului tău</h2>
-    <p>Fiecare operator are o pagină cu un test dedicat și sfaturi specifice.</p>
-    <div class="ops"><a href="p/rcs-rds.html" style="--c:#002bff"><strong>Test Digi</strong><span>Testează conexiunea Digi, fixă sau mobilă, pe un server din propria rețea.</span></a><a href="p/orange.html" style="--c:#FF7900"><strong>Test Orange</strong><span>Măsoară viteza abonamentului Orange: download, upload și ping.</span></a><a href="p/telekom.html" style="--c:#e20074"><strong>Test Telekom</strong><span>Verifică dacă abonamentul Telekom oferă viteza promisă.</span></a><a href="p/vodafone.html" style="--c:#e60000"><strong>Test Vodafone</strong><span>Testează descărcarea pe conexiunea Vodafone, prin Fast.com.</span></a></div>
-
-    <h2>Întrebări frecvente</h2>
-    <details><summary>Cât de exact este testul de viteză?</summary><p>Testul arată viteza reală între dispozitivul tău și serverul de test, în acel moment. Rezultatul poate diferi de viteza din abonament din cauza Wi-Fi-ului, a dispozitivului, a distanței până la server și a traficului din rețea. Pentru o imagine corectă, repetă testul de 2–3 ori.</p></details><details><summary>Ce înseamnă Mbps?</summary><p>Mbps înseamnă megabiți pe secundă. Un megabyte (MB) are 8 megabiți, deci o conexiune de 100 Mbps descarcă teoretic aproximativ 12,5 MB pe secundă.</p></details><details><summary>De ce am viteză mai mică pe Wi-Fi decât pe cablu?</summary><p>Wi-Fi-ul pierde din viteză din cauza distanței față de router, a pereților, a interferențelor de la alte rețele și a standardului folosit. Cablul Ethernet oferă de obicei viteza cea mai apropiată de cea din abonament.</p></details><details><summary>Testul de viteză consumă date mobile?</summary><p>Da. Un test poate transfera de la câțiva zeci până la sute de MB, în funcție de viteza conexiunii. Dacă ai trafic limitat, rulează-l pe Wi-Fi sau cu moderație.</p></details><details><summary>Ce ping este bun?</summary><p>Sub 30 ms este foarte bun, 30–60 ms este bun pentru uz general și gaming, iar peste 100 ms se simte în jocuri și apeluri video.</p></details>
-  </div></main>
   <!-- UTILE:START -->
+  <section class="features4 cid-tTTHxBhMnL" id="service-list-2-tTTHxBhMnL">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 content-head">
+          <div class="mbr-section-head mb-5">
+            <h2 class="mbr-section-title mbr-fonts-style align-center mb-0 display-2"><strong>Utile</strong></h2>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+      <div class="item features-image col-12 col-md-6 col-lg-4"><div class="item-wrapper"><div class="item-img"><a href="https://www.volte.ro/2026/11/motorola-signature-27-pret-si-detalii.html" rel="noopener"><img src="https://i.ibb.co/4nhVqSxf/472b88129c93.jpg" alt="Motorola Signature 27: Preț și detalii pentru noul flagship" width="640" height="360" loading="lazy"></a></div><div class="item-content"><h5 class="item-title mbr-fonts-style display-5"><strong><a class="text-black fw-bold" href="https://www.volte.ro/2026/11/motorola-signature-27-pret-si-detalii.html" rel="noopener">Motorola Signature 27: Preț și detalii pentru noul flagship</a></strong></h5><div class="mbr-section-btn item-footer"><a href="https://www.volte.ro/2026/11/motorola-signature-27-pret-si-detalii.html" rel="noopener" class="btn item-btn btn-primary display-7">Citește</a></div></div></div></div>
+      <div class="item features-image col-12 col-md-6 col-lg-4"><div class="item-wrapper"><div class="item-img"><a href="https://www.volte.ro/2026/11/semnal-plin-dar-fara-internet-cauze-si.html" rel="noopener"><img src="https://i.ibb.co/KxtZM7bf/301a689d0a3d.jpg" alt="Semnal plin dar fără internet: cauze și rezolvări rapide" width="640" height="360" loading="lazy"></a></div><div class="item-content"><h5 class="item-title mbr-fonts-style display-5"><strong><a class="text-black fw-bold" href="https://www.volte.ro/2026/11/semnal-plin-dar-fara-internet-cauze-si.html" rel="noopener">Semnal plin dar fără internet: cauze și rezolvări rapide</a></strong></h5><div class="mbr-section-btn item-footer"><a href="https://www.volte.ro/2026/11/semnal-plin-dar-fara-internet-cauze-si.html" rel="noopener" class="btn item-btn btn-primary display-7">Citește</a></div></div></div></div>
+      <div class="item features-image col-12 col-md-6 col-lg-4"><div class="item-wrapper"><div class="item-img"><a href="https://www.volte.ro/2026/11/hotspot-telefon-oprit-cauze-si-solutii.html" rel="noopener"><img src="https://i.ibb.co/Vd7YVHR/09ac3d78381d.jpg" alt="Hotspot telefon oprit: cauze și soluții Android și iPhone" width="640" height="360" loading="lazy"></a></div><div class="item-content"><h5 class="item-title mbr-fonts-style display-5"><strong><a class="text-black fw-bold" href="https://www.volte.ro/2026/11/hotspot-telefon-oprit-cauze-si-solutii.html" rel="noopener">Hotspot telefon oprit: cauze și soluții Android și iPhone</a></strong></h5><div class="mbr-section-btn item-footer"><a href="https://www.volte.ro/2026/11/hotspot-telefon-oprit-cauze-si-solutii.html" rel="noopener" class="btn item-btn btn-primary display-7">Citește</a></div></div></div></div>
+      </div>
+    </div>
+  </section>
   <!-- UTILE:END -->
-  <footer class="site-footer"><div class="container">
-    <p><a href="index.html">Test viteză internet</a><a href="p/rcs-rds.html">Digi</a><a href="p/orange.html">Orange</a><a href="p/telekom.html">Telekom</a><a href="p/vodafone.html">Vodafone</a></p>
-    <p>&copy; 2026 serv.ro. Toate drepturile rezervate.</p>
-  </div></footer>
+
+  <section class="footer4 cid-tTTHxBlTxv" id="footer-4-tTTHxBlTxv">
+    <div class="container">
+      <div class="media-container-row align-center mbr-white">
+        <div class="col-12">
+          <p class="mbr-text mb-0 mbr-fonts-style display-7">&copy; 2026 serv.ro. Toate drepturile rezervate.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <script src="js/script.min.js" defer></script>
 </body>
 </html>
