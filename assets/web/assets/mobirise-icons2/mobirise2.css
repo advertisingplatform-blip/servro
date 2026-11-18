@@ -3,9 +3,9 @@
   font-display: swap;
   src:  url('https://drive.google.com/uc?id=16mx-fpBXCMNH3v76e4-ZTgS4-U82Am_s');
   src:  url('https://drive.google.com/uc?id=16mx-fpBXCMNH3v76e4-ZTgS4-U82Am_s') format('embedded-opentype'),
-    url('https://drive.google.com/uc?id=1CpUFGYxavhkVahipV1TzJ5XG7c2o2_YI') format('truetype'),
-    url('https://drive.google.com/uc?id=1NJxLMoNXfX1Iv4ZnrSNfKtNbLBDFjwuw') format('woff'),
-    url('https://drive.google.com/uc?id=1PJ3ZnAfu8COIeJ5w6Ty6tPrBiGBTlg6w') format('svg');
+    url('https://serv.ro/assets/web/assets/mobirise-icons2/mobirise2.ttf') format('truetype'),
+    url('https://serv.ro/assets/web/assets/mobirise-icons2/mobirise2.woff') format('woff'),
+    url('https://serv.ro/assets/web/assets/mobirise-icons2/mobirise2.svg') format('svg');
   font-weight: normal;
   font-style: normal;
 }
